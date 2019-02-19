@@ -4,40 +4,22 @@ using FaceBook_InitialVersion.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FaceBook_InitialVersion.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190219160759_Trial_02")]
+    partial class Trial_02
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.2.2-servicing-10034")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("FaceBook_InitialVersion.Models.Comment", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Body")
-                        .IsRequired();
-
-                    b.Property<DateTime>("CreationDate");
-
-                    b.Property<int>("State");
-
-                    b.Property<int>("UserPostCommentID");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("Comments");
-                });
 
             modelBuilder.Entity("FaceBook_InitialVersion.Models.Person", b =>
                 {
@@ -101,28 +83,6 @@ namespace FaceBook_InitialVersion.Data.Migrations
                     b.HasDiscriminator<string>("Discriminator").HasValue("Person");
                 });
 
-            modelBuilder.Entity("FaceBook_InitialVersion.Models.Post", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Body")
-                        .IsRequired();
-
-                    b.Property<DateTime>("CreationDate");
-
-                    b.Property<int>("State");
-
-                    b.Property<string>("UserId");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Posts");
-                });
-
             modelBuilder.Entity("FaceBook_InitialVersion.Models.Role", b =>
                 {
                     b.Property<string>("Id")
@@ -149,37 +109,6 @@ namespace FaceBook_InitialVersion.Data.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles");
-                });
-
-            modelBuilder.Entity("FaceBook_InitialVersion.Models.UserPostComment", b =>
-                {
-                    b.Property<string>("userID");
-
-                    b.Property<int>("PostID");
-
-                    b.Property<int>("CommentID");
-
-                    b.HasKey("userID", "PostID", "CommentID");
-
-                    b.HasIndex("CommentID")
-                        .IsUnique();
-
-                    b.HasIndex("PostID");
-
-                    b.ToTable("UserPostComments");
-                });
-
-            modelBuilder.Entity("FaceBook_InitialVersion.Models.UserPostLike", b =>
-                {
-                    b.Property<string>("UserID");
-
-                    b.Property<int>("PostID");
-
-                    b.HasKey("UserID", "PostID");
-
-                    b.HasIndex("PostID");
-
-                    b.ToTable("UserPostLikes");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -284,44 +213,6 @@ namespace FaceBook_InitialVersion.Data.Migrations
                     b.Property<int>("State");
 
                     b.HasDiscriminator().HasValue("Member");
-                });
-
-            modelBuilder.Entity("FaceBook_InitialVersion.Models.Post", b =>
-                {
-                    b.HasOne("FaceBook_InitialVersion.Models.Member", "User")
-                        .WithMany("Posts")
-                        .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("FaceBook_InitialVersion.Models.UserPostComment", b =>
-                {
-                    b.HasOne("FaceBook_InitialVersion.Models.Comment", "Comment")
-                        .WithOne("UserPostComments")
-                        .HasForeignKey("FaceBook_InitialVersion.Models.UserPostComment", "CommentID")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("FaceBook_InitialVersion.Models.Post", "Post")
-                        .WithMany("UserPostComments")
-                        .HasForeignKey("PostID")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("FaceBook_InitialVersion.Models.Member", "User")
-                        .WithMany("UserPostComments")
-                        .HasForeignKey("userID")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("FaceBook_InitialVersion.Models.UserPostLike", b =>
-                {
-                    b.HasOne("FaceBook_InitialVersion.Models.Post", "Post")
-                        .WithMany("UserPostLikes")
-                        .HasForeignKey("PostID")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("FaceBook_InitialVersion.Models.Member", "User")
-                        .WithMany("UserPostLikes")
-                        .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

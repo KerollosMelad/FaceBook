@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using FaceBook_InitialVersion.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using FaceBook_InitialVersion.Models;
 
 namespace FaceBook_InitialVersion
 {
@@ -35,12 +36,26 @@ namespace FaceBook_InitialVersion
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            // database service
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>()
-                .AddDefaultUI(UIFramework.Bootstrap4)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            ////
+            //services.AddDefaultIdentity<IdentityUser>()
+            //    .AddDefaultUI(UIFramework.Bootstrap4)
+            //    .AddEntityFrameworkStores<ApplicationDbContext>();
+
+
+            // add custome identity
+            services.AddIdentity<Person, Role>(options =>
+            {
+                options.Password.RequiredLength = 6;
+            })
+            .AddEntityFrameworkStores<ApplicationDbContext>()  // the database context that is used to load and store your info  
+            .AddDefaultTokenProviders()
+            .AddDefaultUI();  //use your default UI for authentication 
+            /////////////////////////////////////////////////////////////////
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
@@ -64,6 +79,7 @@ namespace FaceBook_InitialVersion
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
+            // add authentication as middlware in the piple line 
             app.UseAuthentication();
 
             app.UseMvc(routes =>
