@@ -1,23 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
+using static FaceBook_InitialVersion.Models.Enums;
 
 namespace FaceBook_InitialVersion.Models
 {
     public class Friendship
     {
-        public string state { get; set; }
+        [Key]
+        public int ID { get; set; }
+        public FriendShipStatus friendShipStatus { get; set; }
 
-        [ForeignKey("Friend")]
-        public string _friendID { get; set; }
+        /// <summary>
+        /// /////////////////////////////////////////////////
+        /// </summary>
 
-        [ForeignKey("User")]
-        public string _userID { get; set; }
-
+        public int FriendID { get; set; }
 
         public virtual Member User { get; set; }
-        public virtual Member Friend { get; set; }
+
     }
 }

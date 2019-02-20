@@ -27,7 +27,7 @@ namespace FaceBook_InitialVersion.Models
         public virtual List<UserPostLike> UserPostLikes { get; set; }
         public virtual List<UserPostComment> UserPostComments { get; set; }
 
-        public virtual List<Friendship> friendship { get; set; }
+        public virtual List<Friendship> friendships { get; set; }
 
 
     }
