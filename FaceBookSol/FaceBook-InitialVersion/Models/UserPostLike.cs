@@ -15,6 +15,6 @@ namespace FaceBook_InitialVersion.Models
 
         public virtual Post Post { get; set; }
 
-        public virtual Member User { get; set; }
+        public virtual Person User { get; set; }
     }
 }

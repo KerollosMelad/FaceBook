@@ -37,5 +37,14 @@ namespace FaceBook_InitialVersion.Models
             Deleted,
             Active
         }
+
+        public enum UserType
+        {
+            Admin,
+            User
+        }
+
+        
+
     }
 }

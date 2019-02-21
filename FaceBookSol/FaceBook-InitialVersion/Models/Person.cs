@@ -20,6 +20,17 @@ namespace FaceBook_InitialVersion.Models
 
         }
 
+        /// <summary>
+        ///  admin Or User
+        /// </summary>
+        public UserType Type { get; set; }
+
+
+        [Required]
+        public UserStatus State { get; set; }
+
+        public string Bio { get; set; }
+
         public DateTime BirthDay { get; set; }
 
         [Required]
@@ -27,7 +38,11 @@ namespace FaceBook_InitialVersion.Models
 
         public DateTime CreationDate { get; set; }
 
-        //public virtual List<FriendShip> FriendRequestMade { get; set; }
-        //public virtual List<FriendShip> FriendRequestAccepted { get; set; }
+        public virtual List<Friendship> FriendRequestMade { get; set; }
+        public virtual List<Friendship> FriendRequestAccepted { get; set; }
+
+        public virtual List<Post> Posts { get; set; }
+        public virtual List<UserPostLike> UserPostLikes { get; set; }
+        public virtual List<UserPostComment> UserPostComments { get; set; }
     }
 }

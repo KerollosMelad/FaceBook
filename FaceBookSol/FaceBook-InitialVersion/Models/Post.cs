@@ -23,7 +23,7 @@ namespace FaceBook_InitialVersion.Models
         [Required]
         public PostStatus State { get; set; }
 
-        public virtual Member User { get; set; }
+        public virtual Person User { get; set; }
 
         public virtual List<UserPostComment> UserPostComments { get; set; }
 

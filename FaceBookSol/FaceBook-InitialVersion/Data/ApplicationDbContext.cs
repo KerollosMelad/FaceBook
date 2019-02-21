@@ -14,10 +14,9 @@ namespace FaceBook_InitialVersion.Data
         {
         }
 
-
+        
         #region Tables
-        public virtual DbSet<Admin> Admins { get; set; }
-        public virtual DbSet<Member> Members { get; set; }
+        public virtual DbSet<Person> Users { get; set; }
         public virtual DbSet<Post> Posts { get; set; }
         public virtual DbSet<UserPostLike> UserPostLikes { get; set; }
         public virtual DbSet<Comment> Comments { get; set; }
@@ -40,27 +39,27 @@ namespace FaceBook_InitialVersion.Data
             #endregion
 
             #region Friendship Relations
-            //   builder.Entity<Friendship>()
-            //.HasKey(K => new { K._userID, K._friendID });
-
-            //   builder.Entity<Friendship>()
-            //       .HasOne(US => US.User)
-            //       .WithOne()
-            //       .OnDelete(DeleteBehavior.Restrict);
-
-            //   builder.Entity<Friendship>()
-            //       .HasOne(F => F.Friend)
-            //       .WithMany(US => US.friendship)
-            //       .OnDelete(DeleteBehavior.Restrict); 
+            builder.Entity<Friendship>()
+               .HasKey(K => new { K._userID, K._friendID });
 
             builder.Entity<Friendship>()
-                .HasKey(FS => FS.ID);
+                .HasOne(US => US.User)
+                .WithMany(F => F.FriendRequestMade)
+                .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Entity<Member>()
-                .HasMany(FS => FS.friendships)
-                .WithOne(M => M.User);
+            builder.Entity<Friendship>()
+                .HasOne(US => US.Friend)
+                .WithMany(F => F.FriendRequestAccepted)
+                .OnDelete(DeleteBehavior.Restrict);
 
-                
+            //builder.Entity<Friendship>()
+            //    .HasKey(FS => FS.ID);
+
+            //builder.Entity<Person>()
+            //    .HasMany(FS => FS.friendships)
+            //    .WithOne(M => M.User);
+
+
             #endregion
         }
 

@@ -10,17 +10,17 @@ namespace FaceBook_InitialVersion.Models
 {
     public class Friendship
     {
-        [Key]
-        public int ID { get; set; }
+
+        [ForeignKey("User")]
+        public string _userID { get; set; }
+
+        [ForeignKey("Friend")]
+        public string _friendID { get; set; }
+           
         public FriendShipStatus friendShipStatus { get; set; }
 
-        /// <summary>
-        /// /////////////////////////////////////////////////
-        /// </summary>
-
-        public int FriendID { get; set; }
-
-        public virtual Member User { get; set; }
+        public virtual Person User { get; set; }
+        public virtual Person Friend { get; set; }
 
     }
 }
