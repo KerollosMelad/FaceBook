@@ -32,7 +32,7 @@ namespace FaceBook_InitialVersion.Models
                     LastName = "Emad",
                     Gender = Enums.Gender.Male,
                     UserName = "z@z.com",
-                    
+                    State=Enums.UserStatus.Active
                 };
                 await userManager.CreateAsync(user);
                 await userManager.AddPasswordAsync(user, "Shehab@456");
@@ -47,7 +47,8 @@ namespace FaceBook_InitialVersion.Models
                     FirstName = "Shehab",
                     LastName = "Mohsen",
                     Gender = Enums.Gender.Male,
-                    UserName = "nb@b.com"
+                    UserName = "nb@b.com",
+                    State = Enums.UserStatus.Active
                 };
                 await userManager.CreateAsync(user);
                 await userManager.AddPasswordAsync(user, "Shehab@456");
