@@ -30,8 +30,13 @@ namespace FaceBook_InitialVersion.Models
         public UserStatus State { get; set; }
 
         public string Bio { get; set; }
-
+        [DataType(DataType.Date)]
         public DateTime BirthDay { get; set; }
+        [Required]
+        public string FirstName { get; set; }
+        [Required]
+        public string LastName { get; set; }
+ 
 
         [Required]
         public Gender Gender { get; set; }
