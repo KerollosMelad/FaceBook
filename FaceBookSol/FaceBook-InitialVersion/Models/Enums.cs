@@ -38,13 +38,11 @@ namespace FaceBook_InitialVersion.Models
             Active
         }
 
-        public enum UserType
-        {
-            Admin,
-            User
-        }
-
+        //public enum UserType
+        //{
+        //    Admin,
+        //    User
+        //}
         
-
     }
 }

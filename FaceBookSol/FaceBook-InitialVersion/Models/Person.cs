@@ -20,10 +20,10 @@ namespace FaceBook_InitialVersion.Models
 
         }
 
-        /// <summary>
-        ///  admin Or User
-        /// </summary>
-        public UserType Type { get; set; }
+        ///// <summary>
+        /////  admin Or User
+        ///// </summary>
+        //public UserType Type { get; set; }
 
 
         [Required]
