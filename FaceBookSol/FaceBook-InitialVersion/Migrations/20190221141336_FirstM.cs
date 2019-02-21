@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace FaceBook_InitialVersion.Migrations
 {
-    public partial class trial01 : Migration
+    public partial class FirstM : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -43,12 +43,14 @@ namespace FaceBook_InitialVersion.Migrations
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
                     AccessFailedCount = table.Column<int>(nullable: false),
+                    Type = table.Column<int>(nullable: false),
+                    State = table.Column<int>(nullable: false),
+                    Bio = table.Column<string>(nullable: true),
                     BirthDay = table.Column<DateTime>(nullable: false),
+                    FirstName = table.Column<string>(nullable: false),
+                    LastName = table.Column<string>(nullable: false),
                     Gender = table.Column<int>(nullable: false),
-                    CreationDate = table.Column<DateTime>(nullable: false),
-                    Discriminator = table.Column<string>(nullable: false),
-                    State = table.Column<int>(nullable: true),
-                    Bio = table.Column<string>(nullable: true)
+                    CreationDate = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -180,9 +182,9 @@ namespace FaceBook_InitialVersion.Migrations
                 name: "Friendships",
                 columns: table => new
                 {
-                    _friendID = table.Column<string>(nullable: false),
                     _userID = table.Column<string>(nullable: false),
-                    state = table.Column<string>(nullable: true)
+                    _friendID = table.Column<string>(nullable: false),
+                    friendShipStatus = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -321,12 +323,6 @@ namespace FaceBook_InitialVersion.Migrations
                 name: "IX_Friendships__friendID",
                 table: "Friendships",
                 column: "_friendID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Friendships__userID",
-                table: "Friendships",
-                column: "_userID",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Posts_UserId",
