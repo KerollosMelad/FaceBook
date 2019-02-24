@@ -26,9 +26,9 @@ namespace FaceBook_InitialVersion.Controllers
         }
 
         // GET: Posts
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.Posts.ToListAsync());
+            return View(_context.Posts.ToList());
         }
 
         // GET: Posts/Details/5
@@ -126,34 +126,34 @@ namespace FaceBook_InitialVersion.Controllers
         }
 
         // GET: Posts/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        //public async Task<IActionResult> Delete(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var post = await _context.Posts
-                .FirstOrDefaultAsync(m => m.ID == id);
-            if (post == null)
-            {
-                return NotFound();
-            }
+        //    var post = await _context.Posts
+        //        .FirstOrDefaultAsync(m => m.ID == id);
+        //    if (post == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return View(post);
-        }
+        //    return View(post);
+        //}
 
-        // POST: Posts/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        //// POST: Posts/Delete/5
+        //[HttpPost, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id)
         {
             var post = await _context.Posts.FindAsync(id);
             //_context.Posts.Remove(post);
             post.State = PostStatus.Deleted;
             _context.Update(post);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return PartialView("GetAll", await _context.Posts.ToListAsync());
         }
 
         private bool PostExists(int id)
