@@ -40,8 +40,9 @@ namespace FaceBook_InitialVersion.Models
 
         public enum UserType
         {
-            Admin,
-            User
+            User,
+            Admin
+            
         }
 
         

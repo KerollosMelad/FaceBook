@@ -53,6 +53,33 @@ namespace FaceBook_InitialVersion.Models
                 await userManager.AddPasswordAsync(user, "Shehab@456");
                 await userManager.AddToRoleAsync(user, role2);
             }
+            if (await userManager.FindByEmailAsync("John@Shehab.com") == null)
+            {
+                var user = new Person()
+                {
+                    Email = "John@Shehab.com",
+                    BirthDay = DateTime.Now,
+                    FirstName = "first",
+                    LastName = "admin",
+                    Gender = Enums.Gender.Male,
+                    UserName = "John@Shehab.com"
+                };
+            }
+                if (await userManager.FindByEmailAsync("Shehab@John1.com") == null)
+                {
+                    var user = new Person()
+                    {
+                        Email = "Shehab@John1.com",
+                        BirthDay = DateTime.Now,
+                        FirstName = "first",
+                        LastName = "admin",
+                        Gender = Enums.Gender.Male,
+                        UserName = "Shehab@John1.com"
+                    };
+                    await userManager.CreateAsync(user);
+                await userManager.AddPasswordAsync(user, "Shehab@John1");
+                await userManager.AddToRoleAsync(user, role1);
+            }
             await context.SaveChangesAsync();
 
         }
