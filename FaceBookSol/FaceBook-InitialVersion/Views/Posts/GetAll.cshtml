@@ -1,48 +1,62 @@
 ﻿@model IEnumerable<FaceBook_InitialVersion.Models.Post>
-@*
-    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
-*@
+
+@using Microsoft.AspNetCore.Identity
+
+@inject UserManager<Person> UserManager
 
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Body)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreationDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.State)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            @if (item.State == Enums.PostStatus.Active)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Body)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.CreationDate)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.State)
-                    </td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                        <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+@foreach (var item in Model)
+{
+    if (item.State == Enums.PostStatus.Active)
+    {
+        <div class="post-content">
+            <div class="post-container">
+                <img src="http://placehold.it/300x300" alt="user" class="profile-photo-md pull-left" />
+                <div class="post-detail">
+                    <div class="user-info">
+                        <h5><a href="#" class="profile-link">@item.User.FirstName @item.User.LastName</a></h5>
+                        <p class="text-muted">Post published at @item.CreationDate</p>
+                    </div>
+                    <div class="reaction">
+                        @* Show likes counter *@
+                        <a asp-action="Like" asp-route-id="@item.ID"
+                           data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="get"
+                           class="btn text-green"><i class="fas fa-thumbs-up"></i>@item.UserPostLikes.Where(p => p.PostID == item.ID).Count()</a>
+                        @* Show Delete icon for the user if he wrote that post *@
+                        @if (item.UserID == @UserManager.Users
+                                           .Where(u => u.UserName == User.Identity.Name)
+                                           .Select(u => u.Id)
+                                           .FirstOrDefault())
+                        {
+                            <a asp-action="Delete" asp-route-id="@item.ID"
+                               data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="get"
+                               class="btn text-red"><i class="fas fa-trash-alt"></i></a>
+                        }
+                    </div>
+                    <div class="line-divider"></div>
+                    <div class="post-text">
+                        <p>@item.Body</p>
+                    </div>
+                    <div class="line-divider"></div>
+                    @* Check if the post has comments then show these comments *@
+                    @if (item.UserPostComments?.Count > 0)
+                    {
+                        @foreach (var comment in item.UserPostComments)
+                        {
+                            <div class="post-comment">
+                                <img src="http://placehold.it/300x300" alt="" class="profile-photo-sm" />
+                                <p><a href="#" class="profile-link">@comment.User.FirstName @comment.User.LastName </a> @comment.Comment.Body</p>
+                            </div>
+                        }
+                    }
+                    @* Add new comment - Not Implemented Yet *@
+                    <div class="post-comment">
+                        <img src="http://placehold.it/300x300" alt="" class="profile-photo-sm" />
+                        <input type="text" class="form-control" placeholder="Post a comment">
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
 
-                        <a asp-action="Delete" asp-route-id="@item.ID"
-                           data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace">Delete</a>
-                    </td>
-                </tr>
-            }
-        }
-    </tbody>
-</table>

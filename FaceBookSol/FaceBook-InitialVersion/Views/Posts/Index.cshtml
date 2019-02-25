@@ -1,14 +1,43 @@
 ﻿@model IEnumerable<FaceBook_InitialVersion.Models.Post>
 
 @{
-ViewData["Title"] = "Index";
+    ViewData["Title"] = "Posts";
 }
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<Person> SignInManager
 
-<h1>Index</h1>
+@if (SignInManager.IsSignedIn(User))
+{
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
+    <div class="row">
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<div id="MyPosts">
-    <partial name="GetAll" model="Model" />
-</div>
+        <!-- Newsfeed Common Side Bar Left
+        ================================================= -->
+        <div class="col-md-3 static">
+
+        </div>
+
+        <div class="col-md-7">
+            @* Rendering Partial View for Create Post Box *@
+            <!-- Post Create Box
+            ================================================= -->
+            <div class="create-post">
+                <div id="create-post-box">
+                    <partial name="_CreatePostBox" model="Model" />
+                </div>
+            </div><!-- Post Create Box End-->
+            
+            @* Rendering Partial View for Posts list *@
+
+            <!-- Post Content
+            ================================================= -->
+            
+            <div id="MyPosts">
+                <partial name="GetAll" model="Model" />
+            </div>
+
+        </div>
+    </div>
+}

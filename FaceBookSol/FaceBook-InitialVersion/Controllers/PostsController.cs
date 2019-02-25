@@ -28,7 +28,7 @@ namespace FaceBook_InitialVersion.Controllers
         // GET: Posts
         public IActionResult Index()
         {
-            return View(_context.Posts.ToList());
+            return View(_context.Posts.Include(u => u.User).Include(u => u.UserPostLikes).ToList());
         }
 
         // GET: Posts/Details/5
@@ -125,27 +125,6 @@ namespace FaceBook_InitialVersion.Controllers
             return View(post);
         }
 
-        // GET: Posts/Delete/5
-        //public async Task<IActionResult> Delete(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var post = await _context.Posts
-        //        .FirstOrDefaultAsync(m => m.ID == id);
-        //    if (post == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return View(post);
-        //}
-
-        //// POST: Posts/Delete/5
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
             var post = await _context.Posts.FindAsync(id);
@@ -153,7 +132,27 @@ namespace FaceBook_InitialVersion.Controllers
             post.State = PostStatus.Deleted;
             _context.Update(post);
             await _context.SaveChangesAsync();
-            return PartialView("GetAll", await _context.Posts.ToListAsync());
+            return PartialView("GetAll", await _context.Posts.Include(p => p.User).Include(u => u.UserPostLikes).ToListAsync());
+        }
+
+        public async Task<IActionResult> Like(int id)
+        {
+            var post = await _context.Posts.Include(l => l.UserPostLikes).Where(p => p.ID == id).FirstOrDefaultAsync();
+
+            // Check if the user already liked this post ... if not add his ID and Post's ID to the UserPostLikes
+            if (!post.UserPostLikes.Where(u => u.PostID == id && u.UserID == _userManager.GetUserId(User)).Any())
+            {
+                post.UserPostLikes.Add(new UserPostLike
+                {
+                    PostID = post.ID,
+                    UserID = _userManager.GetUserId(User)
+                });
+
+                _context.Update(post);
+                await _context.SaveChangesAsync();
+            }
+
+            return PartialView("GetAll", await _context.Posts.Include(p => p.User).Include(u => u.UserPostLikes).ToListAsync());
         }
 
         private bool PostExists(int id)
