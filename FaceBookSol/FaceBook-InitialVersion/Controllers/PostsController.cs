@@ -28,7 +28,9 @@ namespace FaceBook_InitialVersion.Controllers
         // GET: Posts
         public IActionResult Index()
         {
-            return View(_context.Posts.Include(u => u.User).Include(u => u.UserPostLikes).ToList());
+            // returning list of posts including the User and the Post Like
+            // so we can show them and displaying this list descending by Creation Date
+            return View(_context.Posts.Include(u => u.User).Include(u => u.UserPostLikes).ToList().OrderByDescending(p => p.CreationDate));
         }
 
         // GET: Posts/Details/5
@@ -69,9 +71,13 @@ namespace FaceBook_InitialVersion.Controllers
                 post.State = PostStatus.Active;
                 _context.Add(post);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                //return RedirectToAction(nameof(Index));
+                return PartialView("GetAll", await _context.Posts.Include(p => p.User).Include(u => u.UserPostLikes).OrderByDescending(p => p.CreationDate).ToListAsync());
+
             }
-            return View(post);
+            //return View(post);
+            return RedirectToAction(nameof(Index));
+
         }
 
         // GET: Posts/Edit/5
@@ -132,7 +138,9 @@ namespace FaceBook_InitialVersion.Controllers
             post.State = PostStatus.Deleted;
             _context.Update(post);
             await _context.SaveChangesAsync();
-            return PartialView("GetAll", await _context.Posts.Include(p => p.User).Include(u => u.UserPostLikes).ToListAsync());
+            //return PartialView("GetAll", await _context.Posts.Include(p => p.User).Include(u => u.UserPostLikes).ToListAsync());
+            return PartialView("GetAll", await _context.Posts.Include(p => p.User).Include(u => u.UserPostLikes).OrderByDescending(p => p.CreationDate).ToListAsync());
+
         }
 
         public async Task<IActionResult> Like(int id)
@@ -152,7 +160,9 @@ namespace FaceBook_InitialVersion.Controllers
                 await _context.SaveChangesAsync();
             }
 
-            return PartialView("GetAll", await _context.Posts.Include(p => p.User).Include(u => u.UserPostLikes).ToListAsync());
+            //return PartialView("GetAll", await _context.Posts.Include(p => p.User).Include(u => u.UserPostLikes).ToListAsync());
+            return PartialView("GetAll", await _context.Posts.Include(p => p.User).Include(u => u.UserPostLikes).OrderByDescending(p => p.CreationDate).ToListAsync());
+
         }
 
         private bool PostExists(int id)

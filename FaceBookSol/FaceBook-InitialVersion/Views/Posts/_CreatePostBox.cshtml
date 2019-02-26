@@ -1,16 +1,25 @@
-﻿@model IEnumerable<FaceBook_InitialVersion.Models.Post>
+﻿@model FaceBook_InitialVersion.Models.Post
 
-<div class="row">
-    <div class="col-md-11 col-sm-11">
-        <div class="form-group">
-            <img src="http://placehold.it/300x300" alt="" class="profile-photo-md" />
-            <textarea name="texts" id="exampleTextarea" cols="40" rows="4"
-                      class="form-control" placeholder="Write what you wish" style="resize:none;"></textarea>
+@* Making the submiting of the form working with ajax *@
+<form asp-action="Create" data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="post">
+
+    <div class="row">
+
+        <div class="col-md-11 col-sm-11">
+            <div class="form-group">
+                <img src="http://placehold.it/300x300" alt="" class="profile-photo-md" />
+                <textarea id="exampleTextarea" cols="40" rows="4"
+                          class="form-control" placeholder="Write what you wish" style="resize:none;"
+                          asp-for="Body"></textarea>
+
+            </div>
         </div>
-    </div>
-    <div class="col-md-1 col-sm-1">
-        <div class="tools">
-            <button class="btn btn-primary pull-right">Publish</button>
+        <div class="col-md-1 col-sm-1">
+            <div class="tools">
+                <input type="submit" value="Publish" class="btn btn-primary pull-right" />
+
+            </div>
         </div>
+
     </div>
-</div>
+</form>

@@ -8,9 +8,6 @@
 
 @if (SignInManager.IsSignedIn(User))
 {
-    <p>
-        <a asp-action="Create">Create New</a>
-    </p>
     <div class="row">
 
         <!-- Newsfeed Common Side Bar Left
@@ -25,7 +22,8 @@
             ================================================= -->
             <div class="create-post">
                 <div id="create-post-box">
-                    <partial name="_CreatePostBox" model="Model" />
+                    @* Here we send New Post as Model to the partial view so we can work on it there *@
+                    <partial name="_CreatePostBox" model="new Post()" />
                 </div>
             </div><!-- Post Create Box End-->
             
