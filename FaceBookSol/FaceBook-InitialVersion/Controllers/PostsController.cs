@@ -159,6 +159,12 @@ namespace FaceBook_InitialVersion.Controllers
                 _context.Update(post);
                 await _context.SaveChangesAsync();
             }
+            else
+            {
+                post.UserPostLikes.Remove(
+                    post.UserPostLikes.FirstOrDefault(u => u.PostID == post.ID && u.UserID == _userManager.GetUserId(User)));
+                await _context.SaveChangesAsync();
+            }
 
             //return PartialView("GetAll", await _context.Posts.Include(p => p.User).Include(u => u.UserPostLikes).ToListAsync());
             return PartialView("GetAll", await _context.Posts.Include(p => p.User).Include(u => u.UserPostLikes).Include(u => u.UserPostComments).ThenInclude(c => c.Comment).OrderByDescending(p => p.CreationDate).ToListAsync());

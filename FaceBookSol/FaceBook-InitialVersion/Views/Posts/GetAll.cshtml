@@ -19,14 +19,23 @@
                     </div>
                     <div class="reaction">
                         @* Show likes counter *@
-                        <a asp-action="Like" asp-route-id="@item.ID"
-                           data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="get"
-                           class="btn text-green"><i class="fas fa-thumbs-up"></i>@item.UserPostLikes.Where(p => p.PostID == item.ID).Count()</a>
+                        @if (!item.UserPostLikes.Where(u => u.PostID == item.ID && u.UserID == UserManager.GetUserId(User)).Any())
+                        {
+                            <a asp-action="Like" asp-route-id="@item.ID"
+                               data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="get"
+                               class="btn text-green"><i class="fas fa-thumbs-up"></i>@item.UserPostLikes.Where(p => p.PostID == item.ID).Count()</a>
+                        }
+                        else
+                        {
+                            <a asp-action="Like" asp-route-id="@item.ID"
+                               data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="get"
+                               class="btn text-red"><i class="fas fa-thumbs-down"></i>@item.UserPostLikes.Where(p => p.PostID == item.ID).Count()</a>
+                        }
                         @* Show Delete icon for the user if he wrote that post *@
                         @if (item.UserID == @UserManager.Users
-                                           .Where(u => u.UserName == User.Identity.Name)
-                                           .Select(u => u.Id)
-                                           .FirstOrDefault())
+                                        .Where(u => u.UserName == User.Identity.Name)
+                                        .Select(u => u.Id)
+                                        .FirstOrDefault())
                         {
                             <a asp-action="Delete" asp-route-id="@item.ID"
                                data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="get"
