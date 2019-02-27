@@ -33,9 +33,9 @@
                         }
                         @* Show Delete icon for the user if he wrote that post *@
                         @if (item.UserID == @UserManager.Users
-                                        .Where(u => u.UserName == User.Identity.Name)
-                                        .Select(u => u.Id)
-                                        .FirstOrDefault())
+                                       .Where(u => u.UserName == User.Identity.Name)
+                                       .Select(u => u.Id)
+                                       .FirstOrDefault())
                         {
                             <a asp-action="Delete" asp-route-id="@item.ID"
                                data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="get"
@@ -61,7 +61,10 @@
                     @* Add new comment - Not Implemented Yet *@
                     <div class="post-comment">
                         <img src="http://placehold.it/300x300" alt="" class="profile-photo-sm" />
-                        <input type="text" class="form-control" placeholder="Post a comment">
+                        <form data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="post" asp-action="AddComment" asp-controller="Posts" asp-route-postId="@item.ID">
+
+                            <input type="text" class="form-control" placeholder="Post a comment" name="commentBody">
+                        </form>
                     </div>
                 </div>
             </div>
