@@ -43,7 +43,7 @@ namespace FaceBook_InitialVersion.Controllers
             _context.UserPostComments.Add(userPostComment);
             _context.SaveChanges();
             //var commentId = _context.Comments.Where(c => c.CreationDate == comment.CreationDate).Select(c => c.ID).FirstOrDefault();
-            return PartialView("~/Views/Posts/GetAll", await _context.Posts.Include(p => p.User).Include(u => u.UserPostLikes).Include(u => u.UserPostComments).ThenInclude(c => c.Comment).OrderByDescending(p => p.CreationDate).ToListAsync());
+            return PartialView("../Posts/GetAll", await _context.Posts.Include(p => p.User).Include(u => u.UserPostLikes).Include(u => u.UserPostComments).ThenInclude(c => c.Comment).OrderByDescending(p => p.CreationDate).ToListAsync());
 
         }
     }
