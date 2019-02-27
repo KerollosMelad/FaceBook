@@ -50,7 +50,7 @@
                     @* Check if the post has comments then show these comments *@
                     @if (item.UserPostComments?.Count > 0)
                     {
-                        @foreach (var comment in item.UserPostComments)
+                        @foreach (var comment in item.UserPostComments.OrderBy(c=>c.Comment.CreationDate))
                         {
                             <div class="post-comment">
                                 <img src="http://placehold.it/300x300" alt="" class="profile-photo-sm" />
