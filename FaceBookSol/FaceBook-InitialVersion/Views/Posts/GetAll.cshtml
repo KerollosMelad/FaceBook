@@ -61,9 +61,10 @@
                     @* Add new comment - Not Implemented Yet *@
                     <div class="post-comment">
                         <img src="http://placehold.it/300x300" alt="" class="profile-photo-sm" />
-                        <form data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="post" asp-action="AddComment" asp-controller="Posts" asp-route-postId="@item.ID">
+                        <form asp-action="AddComment" asp-controller="Comments" data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="post" asp-route-postId="@item.ID">
 
                             <input type="text" class="form-control" placeholder="Post a comment" name="commentBody">
+                            <input type="submit" value="submit" />
                         </form>
                     </div>
                 </div>
