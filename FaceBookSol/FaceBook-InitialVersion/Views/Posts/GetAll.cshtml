@@ -23,19 +23,19 @@
                         {
                             <a asp-action="Like" asp-route-id="@item.ID"
                                data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="get"
-                               class="btn text-green"><i class="fas fa-thumbs-up"></i>@item.UserPostLikes.Where(p => p.PostID == item.ID).Count()</a>
+                               class="btn text-green"><i class="fas fa-thumbs-up"></i> @item.UserPostLikes.Where(p => p.PostID == item.ID).Count()</a>
                         }
                         else
                         {
                             <a asp-action="Like" asp-route-id="@item.ID"
                                data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="get"
-                               class="btn text-red"><i class="fas fa-thumbs-down"></i>@item.UserPostLikes.Where(p => p.PostID == item.ID).Count()</a>
+                               class="btn text-red"><i class="fas fa-thumbs-down"></i> @item.UserPostLikes.Where(p => p.PostID == item.ID).Count()</a>
                         }
                         @* Show Delete icon for the user if he wrote that post *@
                         @if (item.UserID == @UserManager.Users
-                                       .Where(u => u.UserName == User.Identity.Name)
-                                       .Select(u => u.Id)
-                                       .FirstOrDefault())
+                                     .Where(u => u.UserName == User.Identity.Name)
+                                     .Select(u => u.Id)
+                                     .FirstOrDefault())
                         {
                             <a asp-action="Delete" asp-route-id="@item.ID"
                                data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="get"
@@ -50,12 +50,26 @@
                     @* Check if the post has comments then show these comments *@
                     @if (item.UserPostComments?.Count > 0)
                     {
-                        @foreach (var comment in item.UserPostComments.OrderBy(c=>c.Comment.CreationDate))
+                        @foreach (var comment in item.UserPostComments.OrderBy(c => c.Comment.CreationDate))
                         {
-                            <div class="post-comment">
-                                <img src="http://placehold.it/300x300" alt="" class="profile-photo-sm" />
-                                <p><a href="#" class="profile-link">@comment.User.FirstName @comment.User.LastName </a> @comment.Comment.Body</p>
-                            </div>
+                            if (comment.Comment.State == Enums.CommentStatus.Active)
+                            {
+                                <div class="post-comment">
+                                    <div>
+                                        @if (comment.userID == @UserManager.Users
+                                          .Where(u => u.UserName == User.Identity.Name)
+                                          .Select(u => u.Id)
+                                          .FirstOrDefault())
+                                        {
+                                            <a asp-action="Delete" asp-controller="Comments" asp-route-id="@comment.CommentID"
+                                               data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="get"
+                                               class="btn text-red"><i class="fas fa-trash-alt"></i></a>
+                                        }
+                                    </div>
+                                    <img src="http://placehold.it/300x300" alt="" class="profile-photo-sm" />
+                                    <p style="word-break:break-all"><a href="#" class="profile-link">@comment.User.FirstName @comment.User.LastName </a> @comment.Comment.Body</p>
+                                </div>
+                            }
                         }
                     }
                     @* Add new comment - Not Implemented Yet *@
@@ -64,7 +78,6 @@
                         <form asp-action="AddComment" asp-controller="Comments" data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="post" asp-route-postId="@item.ID">
 
                             <input type="text" class="form-control" placeholder="Post a comment" name="commentBody">
-                            <input type="submit" value="submit" />
                         </form>
                     </div>
                 </div>

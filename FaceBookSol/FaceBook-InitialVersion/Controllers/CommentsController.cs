@@ -44,7 +44,15 @@ namespace FaceBook_InitialVersion.Controllers
             _context.SaveChanges();
             //var commentId = _context.Comments.Where(c => c.CreationDate == comment.CreationDate).Select(c => c.ID).FirstOrDefault();
             return PartialView("../Posts/GetAll", await _context.Posts.Include(p => p.User).Include(u => u.UserPostLikes).Include(u => u.UserPostComments).ThenInclude(c => c.Comment).OrderByDescending(p => p.CreationDate).ToListAsync());
+        }
 
+        public async Task<IActionResult> Delete(int id)
+        {
+            var comment = await _context.Comments.FindAsync(id);
+            comment.State = CommentStatus.Deleted;
+            _context.Update(comment);
+            await _context.SaveChangesAsync();
+            return PartialView("../Posts/GetAll", await _context.Posts.Include(p => p.User).Include(u => u.UserPostLikes).Include(u => u.UserPostComments).ThenInclude(c => c.Comment).OrderByDescending(p => p.CreationDate).ToListAsync());
         }
     }
 }
