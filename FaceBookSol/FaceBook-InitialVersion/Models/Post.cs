@@ -17,8 +17,10 @@ namespace FaceBook_InitialVersion.Models
 
         public DateTime CreationDate { get; set; }
 
-        //[ForeignKey("User")]
-        //public string UserID { get; set; }
+        [ForeignKey("User")]
+        public string UserID { get; set; }
+
+        public Person User { get; set; }
 
         [Required]
         public PostStatus State { get; set; }

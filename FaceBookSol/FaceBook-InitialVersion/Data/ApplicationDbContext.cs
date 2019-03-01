@@ -44,12 +44,14 @@ namespace FaceBook_InitialVersion.Data
 
             builder.Entity<Friendship>()
                 .HasOne(US => US.User)
-                .WithMany(F => F.FriendRequestMade)
+                .WithMany(F => F.MyRequests)
+                .HasForeignKey(US => US._userID)
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<Friendship>()
                 .HasOne(US => US.Friend)
-                .WithMany(F => F.FriendRequestAccepted)
+                .WithMany(F => F.FriendsRequest)
+                .HasForeignKey(F => F._friendID)
                 .OnDelete(DeleteBehavior.Restrict);
 
             //builder.Entity<Friendship>()
