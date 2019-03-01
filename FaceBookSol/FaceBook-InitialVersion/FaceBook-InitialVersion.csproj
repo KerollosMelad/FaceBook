@@ -15,12 +15,4 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.0" />
   </ItemGroup>
 
-
-  <ItemGroup>
-    <Folder Include="wwwroot\css\design\" />
-    <Folder Include="wwwroot\fonts\" />
-    <Folder Include="wwwroot\images\" />
-    <Folder Include="wwwroot\js\design\" />
-  </ItemGroup>
-
 </Project>
