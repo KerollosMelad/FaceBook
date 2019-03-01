@@ -2,7 +2,7 @@
 
 <div id="myDiv">
     <a asp-controller="Person" asp-action="ConfirmFriendRequest" asp-route-currentUserName="@User.Identity.Name" asp-route-FriendUserName="@Model.UserName" class="btn btn-success"> Confirm</a>
-    <a asp-controller="Person" asp-action="DeleteFriendRequest" asp-route-UserID="@User.Identity.Name" asp-route-FriendUserName="@Model.UserName" class="btn btn-danger"> Delete</a>
+    <a asp-controller="Person" asp-action="DeleteFriendRequest" asp-route-currentUserName="@User.Identity.Name" asp-route-FriendUserName="@Model.UserName" class="btn btn-danger"> Delete</a>
 
 
     

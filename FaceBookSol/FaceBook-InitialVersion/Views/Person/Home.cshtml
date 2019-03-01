@@ -1,7 +1,39 @@
-﻿
+﻿@model FaceBook_InitialVersion.Models.PersonModelView
+
 @{
     ViewData["Title"] = "Home";
 }
 
 <h1>Home</h1>
 
+
+@* posts *@
+<table border="1" class="table-dark" width="1000">
+    <tr>
+        <th>
+            Posts
+        </th>
+    </tr>
+    @{
+        if (@Model.FriendPosts.Count > 0)
+        {
+            foreach (var Post in Model.FriendPosts)
+            {
+                <tr>
+                    <td>
+                        Post User : <partial name="_LinkToUserProfile" model="@Post.User" />
+
+                    </td>
+                    <td>
+                        Post Body : @Post.Body
+
+                    </td>
+                    <td>
+                        Post Date : @Post.CreationDate
+
+                    </td>
+                </tr>
+                }
+            }
+        }
+</table>

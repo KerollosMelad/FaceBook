@@ -14,7 +14,8 @@ namespace FaceBook_InitialVersion.Controllers
         private readonly ApplicationDbContext _db;
 
         [BindProperty]
-        public PersonModelView personModelView { get; set; }
+        // model view to present (profile&home) pages 
+        public PersonModelView PersonMV { get; set; }
 
         public PersonController(ApplicationDbContext DB)
         {
@@ -28,10 +29,10 @@ namespace FaceBook_InitialVersion.Controllers
 
         public IActionResult Home(string UserName)
         {
-            var posts = _db.Users.Where(P => P.UserName == UserName)
-                                 .Select(P => P.Posts).ToList();
-
-            return View(posts);
+            PersonMV = GetPersonModel(UserName);
+            // join my posts and friendsPosts 
+            PersonMV.FriendPosts = (PersonMV.FriendPosts.Union(PersonMV.MyPosts)).OrderBy(P => P.CreationDate).ToList();
+            return View(PersonMV);
         }
 
         // GET
@@ -71,13 +72,13 @@ namespace FaceBook_InitialVersion.Controllers
             //} 
             #endregion
 
-            personModelView = GetPersonModel(UserName);
-            if (personModelView.CurrentUser == null)
+            PersonMV = GetPersonModel(UserName);
+            if (PersonMV.CurrentUser == null)
             {
                 return NotFound();
             }
 
-            return View(personModelView);
+            return View(PersonMV);
         }
 
         #region EditInfo
@@ -151,10 +152,10 @@ namespace FaceBook_InitialVersion.Controllers
         /// <param name="UserID"> UserID of the Person who sent the request</param>
         /// <param name="FriendUserName"> userName of the Person who Received the request </param>
         /// <returns></returns>
-        public IActionResult DeleteFriendRequest(string UserID, string FriendUserName)
+        public IActionResult DeleteFriendRequest(string currentUserName, string FriendUserName)
         {
             // get friendship
-            var friendship = GetFriendship(UserID, FriendUserName);
+            var friendship = GetFriendship(currentUserName, FriendUserName);
             if (friendship == null)
             {
                 return NotFound();
@@ -212,7 +213,7 @@ namespace FaceBook_InitialVersion.Controllers
                 _db.Friendships.Remove(friendship);
                 _db.SaveChanges();
             }
-            return RedirectToAction(nameof(Profile), new { @UserName = currentUserName });
+            return RedirectToAction(nameof(Profile), new { @UserName = friendUserName });
         }
 
         public IActionResult AddFriend(string friendUserName)
@@ -229,22 +230,106 @@ namespace FaceBook_InitialVersion.Controllers
                 friendShipStatus = Enums.FriendShipStatus.Pending
             };
 
-            _db.Friendships.Add(friendship);
-            _db.SaveChanges();
+            // check if it's not exist before
+            if ((GetFriendship(User.Identity.Name, friendUserName) == null) &&
+               (GetFriendship(friendUserName, User.Identity.Name) == null))
+            {
+
+                _db.Friendships.Add(friendship);
+                _db.SaveChanges();
+            }
             return RedirectToAction(nameof(Profile), new { @UserName = friendUserName });
         }
         #endregion
 
+        
+        public IActionResult DeleteRequestToFriend(string friendUserName)
+        {
+            // get friendship
+            var friendship = GetFriendship(friendUserName, User.Identity.Name);
+            if (friendship == null)
+            {
+                return NotFound();
+            }
+
+            _db.Friendships.Remove(friendship);
+            _db.SaveChanges();
+            return RedirectToAction(nameof(Profile), new { @UserName = friendUserName });
+        }
+
+        //private PersonModelView GetPersonModel(string userName)
+        //{
+
+        //    var _currentUser = _db.Users
+        //                       .Include(P => P.Posts)
+        //                       .Include(P => P.FriendsRequest)
+        //                       .Include("FriendsRequest.User")
+        //                       .Include(P => P.MyRequests)
+        //                       .Include("MyRequests.Friend")
+        //                       .Where(P => P.UserName == userName)
+        //                       .FirstOrDefault();
+
+        //    var friendsId = _currentUser.MyRequests
+        //                                .Where(Fr => Fr.friendShipStatus == Enums.FriendShipStatus.Accepted)
+        //                                .Select(P => P._friendID)
+        //                                .Union
+        //                                (
+        //                                 _currentUser.FriendsRequest
+        //                                 .Where(F => F.friendShipStatus == Enums.FriendShipStatus.Accepted)
+        //                                 .Select(P => P._userID)
+        //                                );
+
+        //    #region Get friendsRequst 
+        //    /// 
+        //    //List<string> friendsRequestId = new List<string>();
+        //    //if (User.Identity.Name == userName)
+        //    //{
+        //    //    friendsRequestId  = _currentUser.FriendsRequest
+        //    //                         .Where(F => F.friendShipStatus == Enums.FriendShipStatus.Pending).AsQueryable()
+        //    //                         .Select(f => f._userID).ToList();
+        //    //} 
+        //    #endregion
+
+        //    PersonModelView modelView = new PersonModelView()
+        //    {
+        //        CurrentUser = _currentUser,
+        //        MyPosts = _currentUser?.Posts,
+
+        //        // check the login person             
+        //        FriendPosts = User.Identity.Name == userName ? // ternary operator
+        //                     _db.Posts.Where(P => (friendsId.Contains(P.UserID)) && User.Identity.Name == userName).ToList() // true
+        //                     : new List<Post>(),                                                                             // false
+
+        //        myFriends = _db.Users.Where(U => (friendsId.Contains(U.Id))).ToList(),
+        //        #region Get friendsRequst cont.
+        //        //myFriendsRequest = User.Identity.Name == userName ? // ternary operator
+        //        //                  _db.Users.Where(U => (friendsRequestId.Contains(U.Id))).ToList()   // true
+        //        //                  : new  List<Person>()                                              // false
+
+        //        #endregion
+
+        //        //myFriendsRequest = User.Identity.Name == userName ?
+        //        //                    (from s in _db.Users
+        //        //                     where s.UserName == userName
+        //        //                     from c in s.FriendsRequest
+        //        //                     where c.friendShipStatus == Enums.FriendShipStatus.Pending
+        //        //                     select c.User).ToList() 
+        //        //                     : new List<Person>()  
+
+        //    };
+
+        //    return modelView;
+        //}
+
         private PersonModelView GetPersonModel(string userName)
         {
 
-            var _currentUser = _db.Users.Where(P => P.UserName == userName)
+            var _currentUser = _db.Users
                                .Include(P => P.Posts)
-                               .Include(P => P.FriendsRequest)
-                               .Include(P => P.MyRequests)
+                               .Include("FriendsRequest.User")
+                               .Include("MyRequests.Friend")
+                               .Where(P => P.UserName == userName)
                                .FirstOrDefault();
-
-
 
             var friendsId = _currentUser.MyRequests
                                         .Where(Fr => Fr.friendShipStatus == Enums.FriendShipStatus.Accepted)
@@ -256,29 +341,24 @@ namespace FaceBook_InitialVersion.Controllers
                                          .Select(P => P._userID)
                                         );
 
-            List<string> friendsRequestId = new List<string>();
-            if (User.Identity.Name == userName)
-            {
-                friendsRequestId  = _currentUser.FriendsRequest
-                                     .Where(F => F.friendShipStatus == Enums.FriendShipStatus.Pending).AsQueryable()
-                                     .Select(f => f._userID).ToList();
-            }
-
-
             PersonModelView modelView = new PersonModelView()
             {
                 CurrentUser = _currentUser,
-                MyPosts = _currentUser?.Posts,
+                MyPosts = _currentUser?.Posts.OrderBy(P => P.CreationDate).ToList(),
 
-                 // check the login person             
-                FriendPosts = User.Identity.Name == userName ? // ternary operator
-                             _db.Posts.Where(P => (friendsId.Contains(P.UserID)) && User.Identity.Name == userName).ToList() // true
+                // check the login person             
+                FriendPosts = User.Identity.Name == userName ?                                                               // ternary operator
+                             _db.Posts.Where(P => (friendsId.Contains(P.UserID)) && User.Identity.Name == userName)
+                             .OrderBy(P => P.CreationDate).ToList().ToList()                                                 // true
                              : new List<Post>(),                                                                             // false
 
                 myFriends = _db.Users.Where(U => (friendsId.Contains(U.Id))).ToList(),
-                myFriendsRequest = User.Identity.Name == userName ? // ternary operator
-                                  _db.Users.Where(U => (friendsRequestId.Contains(U.Id))).ToList()   // true
-                                  : new  List<Person>()                                              // false
+
+                myFriendsRequest = User.Identity.Name == userName ?                                                 // ternary operator
+                                  _currentUser.FriendsRequest                                                       // true
+                                  .Where(F => F.friendShipStatus == Enums.FriendShipStatus.Pending)                 
+                                  .Select(F => F.User).ToList()                         
+                                  : new List<Person>()                                                             // false
             };
 
             return modelView;
@@ -297,3 +377,5 @@ namespace FaceBook_InitialVersion.Controllers
         }
     }
 }
+
+

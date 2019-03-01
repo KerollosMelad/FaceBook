@@ -12,20 +12,31 @@
 @*Link to Profile & (edit info if you are the current user else add friend/remove friend )  *@
 <div>
     <partial name="_LinkToUserProfile" model="@Model.CurrentUser" />
-    @{
+    @{  
         if (SignInManager.IsSignedIn(User) && User.Identity.Name == @Model.CurrentUser.UserName)
         {
             <partial name="_EditUserInfoPartial" model="@Model.CurrentUser.UserName" />
         }
         else
         {
+            // login person => User.Identity.Name
+            //@Model now is Map To friend 
             if (@Model.myFriends.Any(F => F.UserName == User.Identity.Name))
             {
                 <partial name="_RemoveFriendPartial" model="@Model.CurrentUser" />
             }
+            else if (@Model.CurrentUser.FriendsRequest.Any(F => F.User.UserName == User.Identity.Name))
+            {
+                // friend sent friend request to you
+                <partial name="_DeleteRequestToFriendPartial" model="@Model.CurrentUser" />
+            }
+            else if (@Model.CurrentUser.MyRequests.Any(F => F.Friend.UserName == User.Identity.Name))
+            {
+                // you sent the friend request to him
+                <partial name="_ConfirmDeleteFriendRequestPartial" model="@Model.CurrentUser" />
+            }
             else
             {
-                /////////////////////////////////// remove request 
                 <partial name="_AddFriendPartial" model="@Model.CurrentUser" />
             }
         }
@@ -47,8 +58,16 @@
             {
                 <tr>
                     <td>
+                        Post User : <partial name="_LinkToUserProfile" model="@Post.User" />
+
+                    </td>
+                    <td>
                         Post Body : @Post.Body
+
+                    </td>
+                    <td>
                         Post Date : @Post.CreationDate
+
                     </td>
                 </tr>
             }
