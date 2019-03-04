@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,24 +8,23 @@
 
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-        @*<link media="all" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">*@
+        <link rel="stylesheet" href=“https://maxcdn.bootstrapcdn.com/font-awesome/5.7.2/css/font-awesome.min.css” />
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
+              crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     </environment>
     <environment exclude="Development">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css"
-              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
-              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute"
-              crossorigin="anonymous"
-              integrity="sha256-eSi1q2PG6J7g7ib17yAaWMcrr5GrtohYChqibrV7PBE=" />
+              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css" asp-fallback-test-class="sr-only"
+              asp-fallback-test-property="position" asp-fallback-test-value="absolute" crossorigin="anonymous" integrity="sha256-eSi1q2PG6J7g7ib17yAaWMcrr5GrtohYChqibrV7PBE=" />
     </environment>
     <link rel="stylesheet" href="~/css/site.css" />
     <!-- Stylesheets
     ================================================= -->
-    @*<link href="~/css/design/bootstrap.css" rel="stylesheet" />*@
+    <link href="~/css/design/main.min.css" rel="stylesheet" />
     <link href="~/css/design/style.css" rel="stylesheet" />
-    <link href="~/css/design/ionicons.min.css" rel="stylesheet" />
-    <link href="~/css/design/font-awesome.min.css" rel="stylesheet" />
-    <link href="~/css/design/emoji.css" rel="stylesheet" />
+    <link href="~/css/design/color.css" rel="stylesheet" />
+    <link href="~/css/design/responsive.css" rel="stylesheet" />
 
     <!--Google Font-->
     <link href="https://fonts.googleapis.com/css?family=Lato:300,400,400i,700,700i" rel="stylesheet">
@@ -32,75 +32,137 @@
     <!--Favicon-->
     <link rel="shortcut icon" type="image/png" href="~/images/fav.png" />
 </head>
+
 <body>
-    <header id="header">
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3 ">
-            <div class="container">
+    <div class="theme-layout">
 
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">FaceBook</a>
-
-                <!-- Collect the nav links, forms, and other content for toggling -->
-                <div class="collapse navbar-collapse d-sm-inline-flex flex-sm-row-reverse" id="bs-example-navbar-collapse-1">
-                    <partial name="_LoginPartial" />
-                    <ul class="nav navbar-nav navbar-right main-menu flex-grow-1">
-                        <li class="nav-item newsfeed-home">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/SetPassword">Settings</a>
-                        <li class="nav-item newsfeed-home">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Posts" asp-action="Index">Posts</a>
-                        </li>
-                    </ul>
-                </div><!-- /.navbar-collapse -->
+        <div class="responsive-header">
+            <div class="mh-head first Sticky">
+                <span class="mh-btns-left">
+                    <a class="" href="#menu"><i class="fa fa-align-justify"></i></a>
+                </span>
+                <span class="mh-text">
+                    <a href="newsfeed.html" title=""><img src="images\logo2.png" alt=""></a>
+                </span>
 
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <partial name="_CookieConsentPartial" />
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+            <div class="mh-head second">
+                <form class="mh-form">
+                    <input placeholder="search">
+                    <a href="#/" class="fa fa-search"></a>
+                </form>
+            </div>
+            <nav id="menu" class="res-menu">
+                <ul>
+                    <li>
+                        <span><a asp-area="" asp-controller="Posts" asp-action="Index" title="">Home</a></span>
+                    </li>
+                    <li>
+                        <span><a asp-area="" asp-controller="Posts" asp-action="Index" title="">Time Line</a></span>
+                    </li>
+
+                    <li>
+                        <span>
+                            <a asp-area="Identity" asp-page="/Account/Manage/SetPassword">Settings</a>
+                        </span>
+                    </li>
+                    
+
+                </ul>
+            </nav>
+        </div><!-- responsive header -->
+        <div class="topbar stick">
+            <div class="logo">
+                <a title="" asp-area="" asp-controller="Home" asp-action="Index"><img src="images\logo.png" alt=""></a>
+            </div>
+
+            <div class="top-area">
+                <ul class="main-menu">
+                    <li>
+                        <a asp-area="" asp-controller="Posts" asp-action="Index" title="">Home</a>
+                    </li>
+                    <li>
+                        <a asp-area="" asp-controller="Posts" asp-action="Index" title="">Timeline</a>
+                    </li>
+                    <li>
+                        <a asp-area="Identity" asp-page="/Account/Manage/SetPassword" title="">Settings</a>
+                    </li>
+
+                </ul>
+                <partial name="_LoginPartial" />
+
+
+            </div>
+        </div><!-- topbar -->
+        <section>
+            <partial name="_CookieConsentPartial" />
+
+            <div class="gap gray-bg">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="row" id="page-contents">
+                                @using Microsoft.AspNetCore.Identity
+                                @inject SignInManager<Person> SignInManager
+                                @if (SignInManager.IsSignedIn(User))
+                                {
+                                    <div class="col-lg-3">
+                                        <aside class="sidebar static">
+                                            <div class="widget stick-widget">
+                                                <h4 class="widget-title">Shortcuts</h4>
+                                                <ul class="naves">
+                                                    <li>
+                                                        <i class="ti-clipboard"></i>
+                                                        <a href="newsfeed.html" title="">News feed</a>
+                                                    </li>
+
+                                                    <li>
+                                                        <i class="ti-user"></i>
+                                                        <a href="timeline-friends.html" title="">friends</a>
+                                                    </li>
+
+                                                    <li>
+                                                        <i class="ti-power-off"></i>
+                                                        <a href="landing.html" title="">Logout</a>
+                                                    </li>
+                                                </ul>
+                                            </div><!-- Shortcuts -->
+                                        </aside>
+                                    </div><!-- sidebar -->
+                                }
+                                @RenderBody()
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
 
-    @*<footer class="border-top footer text-muted">
-            <div class="container">
-                &copy; 2019 - FaceBook_InitialVersion - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-            </div>
-        </footer>*@
 
     <environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
         <script src="~/lib/jquery-unobtrusive-ajax/jquery.unobtrusive-ajax.js"></script>
-        <script src="~/js/design/jquery-3.1.1.min.js"></script>
-        <script src="~/js/design/bootstrap.js"></script>
-        <script src="~/js/design/jquery.appear.min.js"></script>
-        <script src="~/js/design/jquery.incremental-counter.js"></script>
+        <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+        <script src="~/js/design/main.min.js"></script>
         <script src="~/js/design/script.js"></script>
+        <script src="~/js/design/map-init.js"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8c55_YHLvDHGACkQscgbGLtLRdxBDCfI"></script>
     </environment>
     <environment exclude="Development">
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"
-                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
-                asp-fallback-test="window.jQuery"
-                crossorigin="anonymous"
-                integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+                asp-fallback-test="window.jQuery" crossorigin="anonymous" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=">
         </script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.bundle.min.js"
-                asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"
-                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
-                crossorigin="anonymous"
-                integrity="sha256-E/V4cWE4qvAeO5MOhjtGtqDzPndRO1LBk8lJ/PR7CA4=">
+                asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js" asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
+                crossorigin="anonymous" integrity="sha256-E/V4cWE4qvAeO5MOhjtGtqDzPndRO1LBk8lJ/PR7CA4=">
         </script>
         <script src="~/lib/jquery-unobtrusive-ajax/jquery.unobtrusive-ajax.js"></script>
     </environment>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="~/lib/unobtruisive-ajax/jquery.unobtrusive-ajax.js"></script>
+
     @RenderSection("Scripts", required: false)
 </body>
+
 </html>

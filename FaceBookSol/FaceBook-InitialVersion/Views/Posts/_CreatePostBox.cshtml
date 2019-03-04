@@ -1,13 +1,16 @@
 ﻿@model FaceBook_InitialVersion.Models.Post
-
 @* Making the submiting of the form working with ajax *@
+
+@using Microsoft.AspNetCore.Identity
+
+@inject UserManager<Person> UserManager
 <form asp-action="Create" data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="post">
 
     <div class="row">
 
         <div class="col-md-11 col-sm-11">
             <div class="form-group">
-                <img src="http://placehold.it/300x300" alt="" class="profile-photo-md" />
+                <img src="@UserManager.Users.Where(u=> u.UserName == User.Identity.Name).Select(u => u.userphoto).FirstOrDefault()" alt="" class="profile-photo-md" />
                 <textarea id="exampleTextarea" cols="40" rows="4"
                           class="form-control" placeholder="Write what you wish" style="resize:none;"
                           asp-for="Body"></textarea>
