@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using static FaceBook_InitialVersion.Models.Enums;
 
 namespace FaceBook_InitialVersion.Models
@@ -20,10 +21,10 @@ namespace FaceBook_InitialVersion.Models
 
         }
 
-        ///// <summary>
-        /////  admin Or User
-        ///// </summary>
-        //public UserType Type { get; set; }
+        /// <summary>
+        ///  admin Or User
+        /// </summary>
+        public UserType Type { get; set; }
 
 
         [Required]
@@ -43,8 +44,20 @@ namespace FaceBook_InitialVersion.Models
 
         public DateTime CreationDate { get; set; }
 
-        public virtual List<Friendship> FriendRequestMade { get; set; }
-        public virtual List<Friendship> FriendRequestAccepted { get; set; }
+        public string userphoto { get; set; }
+        /// <summary>
+        /// your Friend Requests
+        /// From: User (who sent the request)  
+        /// To : Friend(you)
+        /// </summary>
+        public virtual List<Friendship> FriendsRequest { get; set; }
+
+        /// <summary>
+        /// Your Requests
+        /// From: User(you)
+        /// To : Friend
+        /// </summary>
+        public virtual List<Friendship> MyRequests { get; set; }
 
         public virtual List<Post> Posts { get; set; }
         public virtual List<UserPostLike> UserPostLikes { get; set; }
