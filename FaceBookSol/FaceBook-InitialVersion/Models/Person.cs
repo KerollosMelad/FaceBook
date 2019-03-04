@@ -9,7 +9,7 @@ using static FaceBook_InitialVersion.Models.Enums;
 
 namespace FaceBook_InitialVersion.Models
 {
-    public class Person: IdentityUser
+    public class Person : IdentityUser
     {
         public Person()
         {
@@ -21,10 +21,10 @@ namespace FaceBook_InitialVersion.Models
 
         }
 
-        ///// <summary>
-        /////  admin Or User
-        ///// </summary>
-        //public UserType Type { get; set; }
+        /// <summary>
+        ///  admin Or User
+        /// </summary>
+        public UserType Type { get; set; }
 
 
         [Required]
@@ -37,13 +37,14 @@ namespace FaceBook_InitialVersion.Models
         public string FirstName { get; set; }
         [Required]
         public string LastName { get; set; }
- 
+
 
         [Required]
         public Gender Gender { get; set; }
 
         public DateTime CreationDate { get; set; }
 
+        public string userphoto { get; set; }
         /// <summary>
         /// your Friend Requests
         /// From: User (who sent the request)  

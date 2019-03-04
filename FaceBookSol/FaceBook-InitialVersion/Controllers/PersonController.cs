@@ -5,21 +5,25 @@ using System.Threading.Tasks;
 using FaceBook_InitialVersion.Data;
 using FaceBook_InitialVersion.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using System.IO;
 
 namespace FaceBook_InitialVersion.Controllers
 {
     public class PersonController : Controller
     {
         private readonly ApplicationDbContext _db;
+        private readonly IHostingEnvironment _he;
 
         [BindProperty]
         // model view to present (profile&home) pages 
         public PersonModelView PersonMV { get; set; }
 
-        public PersonController(ApplicationDbContext DB)
+        public PersonController(ApplicationDbContext DB, IHostingEnvironment HE)
         {
             _db = DB;
+            _he = HE;
         }
 
         public IActionResult Index()
@@ -38,7 +42,7 @@ namespace FaceBook_InitialVersion.Controllers
         // GET
         public IActionResult Profile(string UserName)
         {
-            
+
             if (UserName == null)
             {
                 return NotFound();
@@ -126,6 +130,38 @@ namespace FaceBook_InitialVersion.Controllers
                     targetPerson.BirthDay = person.BirthDay;
 
                     _db.SaveChanges();
+
+
+                    //saving image to data-base
+                    //getting the webRootePath
+
+                    string webRootePath = _he.WebRootPath;
+                    //get the uploaded file from form 
+                    var files = HttpContext.Request.Form.Files;
+                    //get person from database
+                    //var getpersonfromDB = await _db.Users.FindAsync(person.Id);
+                    if (files.Count > 0)
+                    {
+                        //file has been uploaded
+                        string upload = Path.Combine(webRootePath, "images");
+                        string extension = Path.GetExtension(files[0].FileName);
+                        using (var filesStream = new FileStream(Path.Combine(upload, person.Id + extension), FileMode.Append))
+                        {
+                            files[0].CopyTo(filesStream);
+                        }
+
+                        targetPerson.userphoto = @"\images\" + person.Id + extension;
+                    }
+                    else
+                    {
+                        //no file was uploaded
+                        string upload = Path.Combine(webRootePath, @"images\" + "user.png");
+                        System.IO.File.Copy(upload, webRootePath + @"\images\" + person.Id + ".png");
+                        targetPerson.userphoto = @"\images\" + person.Id + ".png";
+
+                    }
+                    await _db.SaveChangesAsync();
+
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -185,7 +221,7 @@ namespace FaceBook_InitialVersion.Controllers
             friendship.friendShipStatus = Enums.FriendShipStatus.Accepted;
             _db.SaveChanges();
             return RedirectToAction(nameof(Profile), new { @UserName = FriendUserName });
-        } 
+        }
         #endregion
 
         #region  Dealing with Friends
@@ -242,7 +278,7 @@ namespace FaceBook_InitialVersion.Controllers
         }
         #endregion
 
-        
+
         public IActionResult DeleteRequestToFriend(string friendUserName)
         {
             // get friendship
@@ -356,8 +392,8 @@ namespace FaceBook_InitialVersion.Controllers
 
                 myFriendsRequest = User.Identity.Name == userName ?                                                 // ternary operator
                                   _currentUser.FriendsRequest                                                       // true
-                                  .Where(F => F.friendShipStatus == Enums.FriendShipStatus.Pending)                 
-                                  .Select(F => F.User).ToList()                         
+                                  .Where(F => F.friendShipStatus == Enums.FriendShipStatus.Pending)
+                                  .Select(F => F.User).ToList()
                                   : new List<Person>()                                                             // false
             };
 
@@ -377,5 +413,4 @@ namespace FaceBook_InitialVersion.Controllers
         }
     }
 }
-
 
