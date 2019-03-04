@@ -4,14 +4,16 @@ using FaceBook_InitialVersion.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FaceBook_InitialVersion.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190224185328_secondM")]
+    partial class secondM
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -103,6 +105,8 @@ namespace FaceBook_InitialVersion.Migrations
 
                     b.Property<bool>("TwoFactorEnabled");
 
+                    b.Property<int>("Type");
+
                     b.Property<string>("UserName")
                         .HasMaxLength(256);
 
@@ -130,13 +134,13 @@ namespace FaceBook_InitialVersion.Migrations
 
                     b.Property<DateTime>("CreationDate");
 
-                    b.Property<int>("State");
+                    b.Property<string>("PersonId");
 
-                    b.Property<string>("UserID");
+                    b.Property<int>("State");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("UserID");
+                    b.HasIndex("PersonId");
 
                     b.ToTable("Posts");
                 });
@@ -289,21 +293,21 @@ namespace FaceBook_InitialVersion.Migrations
             modelBuilder.Entity("FaceBook_InitialVersion.Models.Friendship", b =>
                 {
                     b.HasOne("FaceBook_InitialVersion.Models.Person", "Friend")
-                        .WithMany("FriendsRequest")
+                        .WithMany("FriendRequestAccepted")
                         .HasForeignKey("_friendID")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("FaceBook_InitialVersion.Models.Person", "User")
-                        .WithMany("MyRequests")
+                        .WithMany("FriendRequestMade")
                         .HasForeignKey("_userID")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("FaceBook_InitialVersion.Models.Post", b =>
                 {
-                    b.HasOne("FaceBook_InitialVersion.Models.Person", "User")
+                    b.HasOne("FaceBook_InitialVersion.Models.Person")
                         .WithMany("Posts")
-                        .HasForeignKey("UserID");
+                        .HasForeignKey("PersonId");
                 });
 
             modelBuilder.Entity("FaceBook_InitialVersion.Models.UserPostComment", b =>

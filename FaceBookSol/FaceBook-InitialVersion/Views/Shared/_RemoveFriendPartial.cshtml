@@ -1,0 +1,6 @@
+﻿@model Person 
+
+<div>
+    <a asp-controller="Person" asp-action="RemoveFriend" asp-route-currentUserName="@User.Identity.Name" asp-route-friendUserName="@Model.UserName" class="btn btn-danger"> Remove</a>
+</div>
+

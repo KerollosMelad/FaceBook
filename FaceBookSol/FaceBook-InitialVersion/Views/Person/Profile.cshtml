@@ -1,0 +1,147 @@
+﻿@model FaceBook_InitialVersion.Models.PersonModelView
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<Person> SignInManager
+@inject UserManager<Person> UserManager
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<h1>Profile</h1>
+
+
+@*Link to Profile & (edit info if you are the current user else add friend/remove friend )  *@
+<div>
+    <partial name="_LinkToUserProfile" model="@Model.CurrentUser" />
+    @{  
+        if (SignInManager.IsSignedIn(User) && User.Identity.Name == @Model.CurrentUser.UserName)
+        {
+            <partial name="_EditUserInfoPartial" model="@Model.CurrentUser.UserName" />
+        }
+        else
+        {
+            // login person => User.Identity.Name
+            //@Model now is Map To friend 
+            if (@Model.myFriends.Any(F => F.UserName == User.Identity.Name))
+            {
+                <partial name="_RemoveFriendPartial" model="@Model.CurrentUser" />
+            }
+            else if (@Model.CurrentUser.FriendsRequest.Any(F => F.User.UserName == User.Identity.Name))
+            {
+                // friend sent friend request to you
+                <partial name="_DeleteRequestToFriendPartial" model="@Model.CurrentUser" />
+            }
+            else if (@Model.CurrentUser.MyRequests.Any(F => F.Friend.UserName == User.Identity.Name))
+            {
+                // you sent the friend request to him
+                <partial name="_ConfirmDeleteFriendRequestPartial" model="@Model.CurrentUser" />
+            }
+            else
+            {
+                <partial name="_AddFriendPartial" model="@Model.CurrentUser" />
+            }
+        }
+    }
+</div>
+<br />
+
+@* posts *@
+<table border="1" class="table-dark" width="1000">
+    <tr>
+        <th>
+            Posts
+        </th>
+    </tr>
+    @{
+        if (@Model.MyPosts.Count > 0)
+        {
+            foreach (var Post in Model.MyPosts)
+            {
+                <tr>
+                    <td>
+                        Post User : <partial name="_LinkToUserProfile" model="@Post.User" />
+
+                    </td>
+                    <td>
+                        Post Body : @Post.Body
+
+                    </td>
+                    <td>
+                        Post Date : @Post.CreationDate
+
+                    </td>
+                </tr>
+            }
+        }
+    }
+</table>
+
+<br />
+
+@* Friends *@
+<table border="1" class="table-dark" width="1000">
+    <tr>
+        <th>
+            Friends
+        </th>
+    </tr>
+    @{
+        if (@Model.myFriends.Count > 0)
+        {
+            foreach (var item in Model.myFriends)
+            {
+                <tr>
+                    <td>
+                        friend Name :
+                        <partial name="_LinkToUserProfile" model="@item" />
+                    </td>
+                    <td>
+                        @{
+                            if (SignInManager.IsSignedIn(User) && User.Identity.Name == @Model.CurrentUser.UserName)
+                            {
+                                <partial name="_RemoveFriendPartial" model="@item" />
+                            }
+                        }
+                    </td>
+                </tr>
+
+            }
+        }
+    }
+</table>
+
+<br />
+
+@* FriendsRequest *@
+
+@{
+    if (SignInManager.IsSignedIn(User) && User.Identity.Name == @Model.CurrentUser.UserName)
+    {
+      <table border="1" class="table-dark" width="1000">
+          <tr>
+              <th>
+                  FriendsRequest
+              </th>
+          </tr>
+          @{
+              if (@Model.myFriendsRequest.Count > 0)
+              {
+                  foreach (var item in Model.myFriendsRequest)
+                  {
+                      <tr>
+                          <td>
+                              friend Name :
+                              <partial name="_LinkToUserProfile" model="@item"/>
+                          </td>
+                          <td>
+                              <partial name="_ConfirmDeleteFriendRequestPartial" model="@item"/>
+                          </td>
+                      </tr>
+     
+                  }
+              }
+          }
+      </table>
+    }
+}
+
+
