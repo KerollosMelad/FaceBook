@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FaceBook_InitialVersion.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190304143838_init")]
+    [Migration("20190304151805_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -291,12 +291,12 @@ namespace FaceBook_InitialVersion.Migrations
             modelBuilder.Entity("FaceBook_InitialVersion.Models.Friendship", b =>
                 {
                     b.HasOne("FaceBook_InitialVersion.Models.Person", "Friend")
-                        .WithMany("FriendRequestAccepted")
+                        .WithMany("FriendsRequest")
                         .HasForeignKey("_friendID")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("FaceBook_InitialVersion.Models.Person", "User")
-                        .WithMany("FriendRequestMade")
+                        .WithMany("MyRequests")
                         .HasForeignKey("_userID")
                         .OnDelete(DeleteBehavior.Restrict);
                 });

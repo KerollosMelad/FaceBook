@@ -83,9 +83,11 @@ namespace FaceBook_InitialVersion.Areas.Identity.Pages.Account
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var p = dbContext.Users.FirstOrDefault(pr => pr.Email ==Input.Email);
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: true);
-                
-                var result1 = await userManager.GetRolesAsync(p);
-               
+                IList<string> result1 = new List<string>();
+                if (p!=null)
+                {
+                    result1 = await userManager.GetRolesAsync(p);
+                }
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
