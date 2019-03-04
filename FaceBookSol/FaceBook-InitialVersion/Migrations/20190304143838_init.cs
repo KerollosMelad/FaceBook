@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace FaceBook_InitialVersion.Migrations
 {
-    public partial class FirstM : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -43,7 +43,6 @@ namespace FaceBook_InitialVersion.Migrations
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
                     AccessFailedCount = table.Column<int>(nullable: false),
-                    Type = table.Column<int>(nullable: false),
                     State = table.Column<int>(nullable: false),
                     Bio = table.Column<string>(nullable: true),
                     BirthDay = table.Column<DateTime>(nullable: false),
@@ -211,15 +210,15 @@ namespace FaceBook_InitialVersion.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Body = table.Column<string>(nullable: false),
                     CreationDate = table.Column<DateTime>(nullable: false),
-                    State = table.Column<int>(nullable: false),
-                    UserId = table.Column<string>(nullable: true)
+                    UserID = table.Column<string>(nullable: true),
+                    State = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Posts", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_Posts_AspNetUsers_UserId",
-                        column: x => x.UserId,
+                        name: "FK_Posts_AspNetUsers_UserID",
+                        column: x => x.UserID,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -325,9 +324,9 @@ namespace FaceBook_InitialVersion.Migrations
                 column: "_friendID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Posts_UserId",
+                name: "IX_Posts_UserID",
                 table: "Posts",
-                column: "UserId");
+                column: "UserID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserPostComments_CommentID",

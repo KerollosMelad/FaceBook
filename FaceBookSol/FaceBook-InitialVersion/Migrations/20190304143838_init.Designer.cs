@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FaceBook_InitialVersion.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190221191651_addingUserIdToPostModel")]
-    partial class addingUserIdToPostModel
+    [Migration("20190304143838_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

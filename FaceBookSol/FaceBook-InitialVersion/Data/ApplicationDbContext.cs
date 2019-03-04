@@ -16,7 +16,7 @@ namespace FaceBook_InitialVersion.Data
 
         
         #region Tables
-        public virtual DbSet<Person> Users { get; set; }
+        //public virtual DbSet<Person> Users { get; set; }
         public virtual DbSet<Post> Posts { get; set; }
         public virtual DbSet<UserPostLike> UserPostLikes { get; set; }
         public virtual DbSet<Comment> Comments { get; set; }
