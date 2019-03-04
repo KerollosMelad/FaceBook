@@ -77,10 +77,13 @@ namespace FaceBook_InitialVersion.Areas.Identity.Pages.Account
             [Required]
             [Display(Name ="Gender")]
             public Gender Gender { get; set; }
+            
+            [Display(Name = "Role")]
+            public UserType role { get; set; }
 
         }
 
-        public void OnGet(string returnUrl = null)
+        public void OnGet(string returnUrl = null )
         {
             ReturnUrl = returnUrl;
         }
@@ -97,30 +100,47 @@ namespace FaceBook_InitialVersion.Areas.Identity.Pages.Account
                     FirstName = Input.FirstName,
                     LastName = Input.LastName,
                     BirthDay = Input.BirthDay,
-                    Gender = Input.Gender
+                    Gender = Input.Gender,
+                    State=Enums.UserStatus.Active
                 };
                 var result = await _userManager.CreateAsync(user, Input.Password);
-                if (result.Succeeded)
+                if (result.Succeeded )
                 {
                     if(!await _roleManager.RoleExistsAsync("Member"))
                     {
                         await _roleManager.CreateAsync(new Role("Member"));
                     }
-                    await _userManager.AddToRoleAsync(user, "Member");
-                    _logger.LogInformation("User created a new account with password.");
+                    if (!await _roleManager.RoleExistsAsync("Admin"))
+                    {
+                        await _roleManager.CreateAsync(new Role("Admin"));
+                    }
+                    if ( Input.role == Enums.UserType.User)
+                    {
+                        await _userManager.AddToRoleAsync(user, "Member");
+                        if (User.IsInRole("Admin"))
+                        {
+                            return RedirectToAction("Index", "Admin");
+                        }
+                        _logger.LogInformation("User created a new account with password.");
 
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    var callbackUrl = Url.Page(
-                        "/Account/ConfirmEmail",
-                        pageHandler: null,
-                        values: new { userId = user.Id, code = code },
-                        protocol: Request.Scheme);
+                        var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                        var callbackUrl = Url.Page(
+                            "/Account/ConfirmEmail",
+                            pageHandler: null,
+                            values: new { userId = user.Id, code = code },
+                            protocol: Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                        await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
+                            $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
-                    await _signInManager.SignInAsync(user, isPersistent: false);
-                    return LocalRedirect(returnUrl);
+                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        return LocalRedirect(returnUrl);
+                    }
+                    else
+                    {
+                        await _userManager.AddToRoleAsync(user, "Admin");
+                      return  RedirectToAction("Index", "Admin");
+                    }
                 }
                 foreach (var error in result.Errors)
                 {

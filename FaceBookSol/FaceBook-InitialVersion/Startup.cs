@@ -52,6 +52,7 @@ namespace FaceBook_InitialVersion
             services.AddIdentity<Person, Role>(options =>
             {
                 options.Password.RequiredLength = 6;
+               
             })
             .AddEntityFrameworkStores<ApplicationDbContext>()  // the database context that is used to load and store your info  
             .AddDefaultTokenProviders()
