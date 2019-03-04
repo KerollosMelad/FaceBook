@@ -1,8 +1,4 @@
-﻿
-@*
-    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@model IEnumerable<FaceBook_InitialVersion.Models.Person>
+﻿@model IEnumerable<FaceBook_InitialVersion.Models.Person>
 
 
 
@@ -26,34 +22,32 @@
 
             @foreach (var item in Model)
             {
-            <tr>
-                <td>@Html.DisplayFor(m => item.FirstName)</td>
-                <td>@Html.DisplayFor(m => item.LastName)</td>
-                <td>@Html.DisplayFor(m => item.Email)</td>
-                <td>@Html.DisplayFor(m => item.Gender)</td>
+                <tr>
+                    <td>@Html.DisplayFor(m => item.FirstName)</td>
+                    <td>@Html.DisplayFor(m => item.LastName)</td>
+                    <td>@Html.DisplayFor(m => item.Email)</td>
+                    <td>@Html.DisplayFor(m => item.Gender)</td>
 
-                <td>
-                    @if (item.State == Enums.UserStatus.Active)
-                    {
-                        <a asp-action="Block" asp-controller="Admin" asp-route-id="@item.Id"  data-ajax="true" data-ajax-mode="replace" data-ajax-method="post" data-ajax-update="#Search"
- class="btn btn-danger ifn-sm">Block</a>
-                    }
-                    else if(item.State==Enums.UserStatus.Blocked)
-                    {
-                        <a asp-action="Activate" asp-controller="Admin" asp-route-id="@item.Id"  data-ajax="true" data-ajax-mode="replace" data-ajax-method="get" data-ajax-update="#Search" class="btn btn-success ifn-sm">Activate</a>
+                    <td>
+                        @if (item.State == Enums.UserStatus.Active)
+                        {
+                            <a asp-action="Block" asp-controller="Admin" asp-route-id="@item.Id" data-ajax="true" data-ajax-mode="replace" data-ajax-method="post" data-ajax-update="#Search"
+                               class="btn btn-danger ifn-sm">Block</a>
+                        }
+                        else if (item.State == Enums.UserStatus.Blocked)
+                        {
+                            <a asp-action="Activate" asp-controller="Admin" asp-route-id="@item.Id" data-ajax="true" data-ajax-mode="replace" data-ajax-method="get" data-ajax-update="#Search" class="btn btn-success ifn-sm">Activate</a>
 
-                    }
+                        }
 
-                </td>
+                    </td>
 
-
-
-            </tr>
+                </tr>
 
             }
 
         </table>
 
     }
-    
+
 </form>

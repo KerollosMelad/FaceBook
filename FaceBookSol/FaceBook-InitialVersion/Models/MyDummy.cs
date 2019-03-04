@@ -84,8 +84,13 @@ namespace FaceBook_InitialVersion.Models
                 await userManager.AddPasswordAsync(user, "Shehab@John1");
                 await userManager.AddToRoleAsync(user, role1);
             }
-            await context.SaveChangesAsync();
+           
 
+            //context.Posts.Add(new Post() { Body = "This is the first post ", CreationDate = DateTime.Now, State = Enums.PostStatus.Active });
+
+
+            await context.SaveChangesAsync();
+                     
         }
 
     }
