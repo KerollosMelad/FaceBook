@@ -24,5 +24,6 @@ namespace FaceBook_InitialVersion.Models
 
         public string Description { get; set; }
         public DateTime CreationDate { get; set; }
+        
     }
 }

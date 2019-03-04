@@ -43,14 +43,11 @@ namespace FaceBook_InitialVersion.Migrations
 
                     b.Property<string>("_friendID");
 
-                    b.Property<string>("state");
+                    b.Property<int>("friendShipStatus");
 
                     b.HasKey("_userID", "_friendID");
 
                     b.HasIndex("_friendID");
-
-                    b.HasIndex("_userID")
-                        .IsUnique();
 
                     b.ToTable("Friendships");
                 });
@@ -62,6 +59,8 @@ namespace FaceBook_InitialVersion.Migrations
 
                     b.Property<int>("AccessFailedCount");
 
+                    b.Property<string>("Bio");
+
                     b.Property<DateTime>("BirthDay");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -69,15 +68,18 @@ namespace FaceBook_InitialVersion.Migrations
 
                     b.Property<DateTime>("CreationDate");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired();
-
                     b.Property<string>("Email")
                         .HasMaxLength(256);
 
                     b.Property<bool>("EmailConfirmed");
 
+                    b.Property<string>("FirstName")
+                        .IsRequired();
+
                     b.Property<int>("Gender");
+
+                    b.Property<string>("LastName")
+                        .IsRequired();
 
                     b.Property<bool>("LockoutEnabled");
 
@@ -97,7 +99,11 @@ namespace FaceBook_InitialVersion.Migrations
 
                     b.Property<string>("SecurityStamp");
 
+                    b.Property<int>("State");
+
                     b.Property<bool>("TwoFactorEnabled");
+
+                    b.Property<int>("Type");
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256);
@@ -113,8 +119,6 @@ namespace FaceBook_InitialVersion.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("Person");
                 });
 
             modelBuilder.Entity("FaceBook_InitialVersion.Models.Post", b =>
@@ -130,11 +134,11 @@ namespace FaceBook_InitialVersion.Migrations
 
                     b.Property<int>("State");
 
-                    b.Property<string>("UserId");
+                    b.Property<string>("UserID");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserID");
 
                     b.ToTable("Posts");
                 });
@@ -284,42 +288,24 @@ namespace FaceBook_InitialVersion.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("FaceBook_InitialVersion.Models.Admin", b =>
-                {
-                    b.HasBaseType("FaceBook_InitialVersion.Models.Person");
-
-                    b.HasDiscriminator().HasValue("Admin");
-                });
-
-            modelBuilder.Entity("FaceBook_InitialVersion.Models.Member", b =>
-                {
-                    b.HasBaseType("FaceBook_InitialVersion.Models.Person");
-
-                    b.Property<string>("Bio");
-
-                    b.Property<int>("State");
-
-                    b.HasDiscriminator().HasValue("Member");
-                });
-
             modelBuilder.Entity("FaceBook_InitialVersion.Models.Friendship", b =>
                 {
-                    b.HasOne("FaceBook_InitialVersion.Models.Member", "Friend")
-                        .WithMany("friendship")
+                    b.HasOne("FaceBook_InitialVersion.Models.Person", "Friend")
+                        .WithMany("FriendsRequest")
                         .HasForeignKey("_friendID")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("FaceBook_InitialVersion.Models.Member", "User")
-                        .WithOne()
-                        .HasForeignKey("FaceBook_InitialVersion.Models.Friendship", "_userID")
+                    b.HasOne("FaceBook_InitialVersion.Models.Person", "User")
+                        .WithMany("MyRequests")
+                        .HasForeignKey("_userID")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("FaceBook_InitialVersion.Models.Post", b =>
                 {
-                    b.HasOne("FaceBook_InitialVersion.Models.Member", "User")
+                    b.HasOne("FaceBook_InitialVersion.Models.Person", "User")
                         .WithMany("Posts")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserID");
                 });
 
             modelBuilder.Entity("FaceBook_InitialVersion.Models.UserPostComment", b =>
@@ -334,7 +320,7 @@ namespace FaceBook_InitialVersion.Migrations
                         .HasForeignKey("PostID")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("FaceBook_InitialVersion.Models.Member", "User")
+                    b.HasOne("FaceBook_InitialVersion.Models.Person", "User")
                         .WithMany("UserPostComments")
                         .HasForeignKey("userID")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -347,7 +333,7 @@ namespace FaceBook_InitialVersion.Migrations
                         .HasForeignKey("PostID")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("FaceBook_InitialVersion.Models.Member", "User")
+                    b.HasOne("FaceBook_InitialVersion.Models.Person", "User")
                         .WithMany("UserPostLikes")
                         .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.Cascade);

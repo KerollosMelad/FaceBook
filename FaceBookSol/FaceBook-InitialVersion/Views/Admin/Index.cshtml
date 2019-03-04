@@ -1,0 +1,30 @@
+﻿@model IEnumerable<FaceBook_InitialVersion.Models.Person>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+<div class="container row">
+    <div class="col-6">
+        <h2 class="text-info">
+            Users List
+        </h2>
+
+    </div>
+    <div class="col-6 text-right">
+        <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-primary">Create New User</a>
+
+    </div>
+
+</div>
+
+
+<form asp-controller="Admin" asp-action="searching"  method="post"  data-ajax="true" data-ajax-mode="replace"   data-ajax-method="post" data-ajax-update="#Search">
+<input  type="text" name="Searchtext" /> 
+<input   type="submit" value="Search" />
+</form>
+<div id="Search">
+
+    <partial name="Search" model="Model"/>
+</div>

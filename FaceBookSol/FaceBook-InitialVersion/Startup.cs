@@ -46,11 +46,13 @@ namespace FaceBook_InitialVersion
             //    .AddDefaultUI(UIFramework.Bootstrap4)
             //    .AddEntityFrameworkStores<ApplicationDbContext>();
 
+            //services.AddScoped<SignInManager<me>, SignInManager<Person>>();
 
             // add custome identity
             services.AddIdentity<Person, Role>(options =>
             {
                 options.Password.RequiredLength = 6;
+               
             })
             .AddEntityFrameworkStores<ApplicationDbContext>()  // the database context that is used to load and store your info  
             .AddDefaultTokenProviders()
@@ -61,7 +63,7 @@ namespace FaceBook_InitialVersion
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env,ApplicationDbContext context,UserManager<Person> userManger,RoleManager<Role>roleManager)
         {
             if (env.IsDevelopment())
             {
@@ -88,6 +90,7 @@ namespace FaceBook_InitialVersion
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+             MyDummy.Initialization(context, userManger, roleManager).Wait();
         }
     }
 }
