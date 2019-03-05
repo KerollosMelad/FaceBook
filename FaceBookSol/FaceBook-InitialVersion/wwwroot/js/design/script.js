@@ -320,7 +320,7 @@ jQuery(".post-comt-box textarea").on("keydown", function(event) {
         $(".post-comt-box button[type='submit']").click();
 	}
     });
-
+    
 /** add emojies to text area **/
     
 //inbox page 	
