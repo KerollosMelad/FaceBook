@@ -10,6 +10,7 @@ using FaceBook_InitialVersion.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using static FaceBook_InitialVersion.Models.Enums;
+using System.Web;
 
 namespace FaceBook_InitialVersion.Controllers
 {
@@ -182,7 +183,7 @@ namespace FaceBook_InitialVersion.Controllers
             var comment = new Comment()
             {
 
-                Body = commentBody,
+                Body = HttpUtility.HtmlEncode(commentBody),
                 CreationDate = DateTime.Now,
                 State = CommentStatus.Active
 
