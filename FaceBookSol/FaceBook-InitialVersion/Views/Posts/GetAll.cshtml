@@ -9,80 +9,148 @@
 {
     if (item.State == Enums.PostStatus.Active)
     {
-        <div class="post-content">
-            <div class="post-container">
-                <img src="@item.User.userphoto" alt="user" class="profile-photo-md pull-left" />
-                <div class="post-detail">
-                    <div class="user-info">
-                        <h5><a href="#" class="profile-link">@item.User.FirstName @item.User.LastName</a></h5>
-                        <p class="text-muted">Post published at @item.CreationDate</p>
+        <div class="central-meta item">
+            <div class="user-post">
+                <div class="friend-info">
+                    <figure>
+                        <img src="images\resources\friend-avatar10.jpeg" alt="">
+                    </figure>
+                    <div class="friend-name">
+                        <ins><a href="#" title="">@item.User.FirstName @item.User.LastName</a></ins>
+                        <span>published: @item.CreationDate.ToString("MMMM dd, yyyy") at @item.CreationDate.ToString("HH:mm tt")</span>
                     </div>
-                    <div class="reaction">
-                        @* Show likes counter *@
-                        @if (!item.UserPostLikes.Where(u => u.PostID == item.ID && u.UserID == UserManager.GetUserId(User)).Any())
-                        {
-                            <a asp-action="Like" asp-route-id="@item.ID"
-                               data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="get"
-                               class="btn text-green"><i class="fas fa-thumbs-up"></i> @item.UserPostLikes.Where(p => p.PostID == item.ID).Count()</a>
-                        }
-                        else
-                        {
-                            <a asp-action="Like" asp-route-id="@item.ID"
-                               data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="get"
-                               class="btn text-red"><i class="fas fa-thumbs-down"></i> @item.UserPostLikes.Where(p => p.PostID == item.ID).Count()</a>
-                        }
-                        @* Show Delete icon for the user if he wrote that post *@
-                        @if (item.UserID == @UserManager.Users
-                                     .Where(u => u.UserName == User.Identity.Name)
-                                     .Select(u => u.Id)
-                                     .FirstOrDefault())
-                        {
-                            <a asp-action="Delete" asp-route-id="@item.ID"
-                               data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="get"
-                               class="btn text-red"><i class="fas fa-trash-alt"></i></a>
-                        }
+                    <div class="post-meta">
+                        @*<img src="images\resources\user-post.jpeg" alt="">*@
+                        <div class="description">
+
+                            <p>@item.Body</p>
+                        </div>
+                        <div class="we-video-info">
+                            <ul>
+                                <li>
+                                    <span class="comment" data-toggle="tooltip" title="Comments">
+                                        <i class="fa fa-comments-o"></i>
+                                        <ins>@item.UserPostComments.Where(c => c.Comment.State == Enums.CommentStatus.Active).Count()</ins>
+                                    </span>
+                                </li>
+                                <li>
+                                    @* Show likes counter *@
+                                    @if (!item.UserPostLikes.Where(u => u.PostID == item.ID && u.UserID == UserManager.GetUserId(User)).Any())
+                                    {
+
+                                        <a asp-action="Like" asp-route-id="@item.ID"
+                                           data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="get">
+                                            <span class="like" @*data-toggle="tooltip" *@ title="like">
+                                                <i class="ti-heart text-red"></i>
+                                                <ins>@item.UserPostLikes.Where(p => p.PostID == item.ID).Count()</ins>
+                                            </span>
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a asp-action="Like" asp-route-id="@item.ID"
+                                           data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="get">
+                                            <span class="dislike" @*data-toggle="tooltip" *@ title="dislike">
+                                                <i class="ti-heart-broken"></i>
+                                                <ins>@item.UserPostLikes.Where(p => p.PostID == item.ID).Count()</ins>
+                                            </span>
+                                        </a>
+                                    }
+
+                                </li>
+                                <li>
+                                    @* Show Delete icon for the user if he wrote that post *@
+                                    @if (item.UserID == @UserManager.Users
+                                              .Where(u => u.UserName == User.Identity.Name)
+                                              .Select(u => u.Id)
+                                              .FirstOrDefault())
+                                    {
+                                        <a asp-action="Delete" asp-route-id="@item.ID"
+                                           data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="get">
+
+                                            <span class="trash" title="delete">
+                                                <i class="fa fa-trash-o"></i>
+                                            </span>
+                                        </a>
+                                    }
+                                </li>
+                            </ul>
+                        </div>
+
                     </div>
-                    <div class="line-divider"></div>
-                    <div class="post-text">
-                        <p>@item.Body</p>
-                    </div>
-                    <div class="line-divider"></div>
-                    @* Check if the post has comments then show these comments *@
-                    @if (item.UserPostComments?.Count > 0)
-                    {
-                        @foreach (var comment in item.UserPostComments.OrderBy(c => c.Comment.CreationDate))
+                </div>
+                <div class="coment-area">
+                    <ul class="we-comet">
+                        @* Check if the post has comments then show these comments *@
+                        @if (item.UserPostComments?.Count > 0)
                         {
-                            if (comment.Comment.State == Enums.CommentStatus.Active)
+                            @foreach (var comment in item.UserPostComments.OrderBy(c => c.Comment.CreationDate))
                             {
-                                <div class="post-comment">
-                                    <div>
-                                        @if (comment.userID == @UserManager.Users
-                                          .Where(u => u.UserName == User.Identity.Name)
-                                          .Select(u => u.Id)
-                                          .FirstOrDefault())
-                                        {
-                                            <a asp-action="Delete" asp-controller="Comments" asp-route-id="@comment.CommentID"
-                                               data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="get"
-                                               class="btn text-red"><i class="fas fa-trash-alt"></i></a>
-                                        }
-                                    </div>
-                                    <img src="http://placehold.it/300x300" alt="" class="profile-photo-sm" />
-                                    <p style="word-break:break-all"><a href="#" class="profile-link">@comment.User.FirstName @comment.User.LastName </a> @comment.Comment.Body</p>
-                                </div>
+                                if (comment.Comment.State == Enums.CommentStatus.Active)
+                                {
+                                    <li>
+                                        @*<partial name="_CommentPartial" model="@comment" />*@
+                                        <div class="comet-avatar">
+                                            <img src="images\resources\comet-1.jpeg" alt="">
+                                        </div>
+                                        <div class="we-comment">
+                                            <div class="coment-head">
+                                                <h5><a href="time-line.html" title="">@comment.User.FirstName @comment.User.LastName</a></h5>
+                                                <span>@comment.Comment.CreationDate.ToString("MMMM dd,yyyy") at @comment.Comment.CreationDate.ToString("HH:mm tt")</span>
+                                                @if (comment.userID == @UserManager.Users
+                                                       .Where(u => u.UserName == User.Identity.Name)
+                                                       .Select(u => u.Id)
+                                                       .FirstOrDefault())
+                                                {
+                                                    <a asp-action="DeleteComment" asp-controller="Posts" asp-route-id="@comment.CommentID"
+                                                       data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="get" title="delete comment"><i class="fa fa-trash-o"></i></a>
+                                                }
+                                            </div>
+                                            <p>@comment.Comment.Body</p>
+                                        </div>
+                                    </li>
+                                }
                             }
                         }
-                    }
-                    @* Add new comment - Not Implemented Yet *@
-                    <div class="post-comment">
-                        <img src="http://placehold.it/300x300" alt="" class="profile-photo-sm" />
-                        <form asp-action="AddComment" asp-controller="Comments" data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="post" asp-route-postId="@item.ID">
-
-                            <input type="text" class="form-control" placeholder="Post a comment" name="commentBody">
-                        </form>
-                    </div>
+                        <li>
+                            <a href="#" title="" class="showmore underline">more comments</a>
+                        </li>
+                        <li class="post-comment">
+                            <div class="comet-avatar">
+                                <img src="images\resources\comet-1.jpeg" alt="">
+                            </div>
+                            <div class="post-comt-box">
+                                <form asp-action="AddComment" asp-controller="Posts"
+                                      data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace"
+                                      data-method="post" asp-route-postId="@item.ID">
+                                    <textarea placeholder="Post your comment" name="commentBody"></textarea>
+                                    <div class="add-smiles">
+                                        <span class="em em-expressionless" title="add icon"></span>
+                                    </div>
+                                    <div class="smiles-bunch">
+                                        <i class="em em---1"></i>
+                                        <i class="em em-smiley"></i>
+                                        <i class="em em-anguished"></i>
+                                        <i class="em em-laughing"></i>
+                                        <i class="em em-angry"></i>
+                                        <i class="em em-astonished"></i>
+                                        <i class="em em-blush"></i>
+                                        <i class="em em-disappointed"></i>
+                                        <i class="em em-worried"></i>
+                                        <i class="em em-kissing_heart"></i>
+                                        <i class="em em-rage"></i>
+                                        <i class="em em-stuck_out_tongue"></i>
+                                    </div>
+                                    <button type="submit"></button>
+                                </form>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
+
+
     }
 }
 

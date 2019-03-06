@@ -70,7 +70,9 @@
                         <a asp-action="Profile" asp-controller="Person" asp-route-UserName="@User.Identity.Name">Profile</a>
                     </li>
                     <li>
-                        <a asp-area="Identity" asp-page="/Account/Manage/SetPassword">Settings</a>
+                        <span>
+                            <a asp-area="Identity" asp-page="/Account/Manage/SetPassword">Settings</a>
+                        </span>
                     </li>
                 </ul>
                 }

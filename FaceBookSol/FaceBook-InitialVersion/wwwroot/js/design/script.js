@@ -41,9 +41,9 @@ $('.friendz-list > li, .chat-users > li').on('click', function() {
 	  });
 	
 /*--- emojies show on text area ---*/	
-	$('.add-smiles > span').on("click", function() {
-	    $(this).parent().siblings(".smiles-bunch").toggleClass("active");
-	  });
+    $("#MyPosts").on("click", '.add-smiles > span', function () {
+        $(this).parent().siblings(".smiles-bunch").toggleClass("active");
+    });
 
 // delete notifications
 $('.notification-box > ul li > i.del').on("click", function(){
@@ -313,16 +313,18 @@ $(function() {
 	}
 	
 /** Post a Comment **/
-jQuery(".post-comt-box textarea").on("keydown", function(event) {
-    
-    /** change the behavior of Enter Button to submit the form **/
-	if (event.keyCode == 13) {
-        $(".post-comt-box button[type='submit']").click();
-	}
-    });
+    //jQuery("#MyPosts").on("keydown", ".post-comt-box textarea", function (event) {
 
-/** add emojies to text area **/
+    //    /** change the behavior of Enter Button to submit the form **/
+    //    if (event.keyCode == 13) {
+    //        $(".post-comt-box button[type='submit']").click();
+    //    }
+    //});
     
+/** add emojies to text area **/
+    //$("#MyPosts").on("click", ".post-comt-box .smiles-bunch i", function () {
+    //    //$(".post-comt-box textarea").val($(".post-comt-box textarea").val());
+    //});
 //inbox page 	
 //***** Message Star *****//  
     $('.message-list > li > span.star-this').on("click", function(){

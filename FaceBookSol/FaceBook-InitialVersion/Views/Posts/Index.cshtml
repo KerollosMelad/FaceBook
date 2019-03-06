@@ -8,34 +8,17 @@
 
 @if (SignInManager.IsSignedIn(User))
 {
-    <div class="row">
+    <div class="col-lg-6">
+        <div class="central-meta">
+            @* Here we send New Post as Model to the partial view so we can work on it there *@
+            <partial name="_CreatePostBox" model="new Post()" />
+        </div><!-- add post new box -->
 
-        <!-- Newsfeed Common Side Bar Left
-        ================================================= -->
-        <div class="col-md-3 static">
-
-        </div>
-
-        <div class="col-md-7">
-            @* Rendering Partial View for Create Post Box *@
-            <!-- Post Create Box
-            ================================================= -->
-            <div class="create-post">
-                <div id="create-post-box">
-                    @* Here we send New Post as Model to the partial view so we can work on it there *@
-                    <partial name="_CreatePostBox" model="new Post()" />
-                </div>
-            </div><!-- Post Create Box End-->
-            
-            @* Rendering Partial View for Posts list *@
-
-            <!-- Post Content
-            ================================================= -->
-            
+        <div class="loadMore">
             <div id="MyPosts">
                 <partial name="GetAll" model="Model" />
             </div>
-
         </div>
-    </div>
+    </div><!-- centerl meta -->
+
 }
