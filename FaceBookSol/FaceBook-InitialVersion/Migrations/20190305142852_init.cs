@@ -43,13 +43,15 @@ namespace FaceBook_InitialVersion.Migrations
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
                     AccessFailedCount = table.Column<int>(nullable: false),
+                    Type = table.Column<int>(nullable: false),
                     State = table.Column<int>(nullable: false),
                     Bio = table.Column<string>(nullable: true),
                     BirthDay = table.Column<DateTime>(nullable: false),
                     FirstName = table.Column<string>(nullable: false),
                     LastName = table.Column<string>(nullable: false),
                     Gender = table.Column<int>(nullable: false),
-                    CreationDate = table.Column<DateTime>(nullable: false)
+                    CreationDate = table.Column<DateTime>(nullable: false),
+                    userphoto = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {

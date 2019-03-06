@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FaceBook_InitialVersion.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190304151805_init")]
+    [Migration("20190305142852_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -105,8 +105,12 @@ namespace FaceBook_InitialVersion.Migrations
 
                     b.Property<bool>("TwoFactorEnabled");
 
+                    b.Property<int>("Type");
+
                     b.Property<string>("UserName")
                         .HasMaxLength(256);
+
+                    b.Property<string>("userphoto");
 
                     b.HasKey("Id");
 
