@@ -1,6 +1,6 @@
 ﻿@model FaceBook_InitialVersion.Models.Post
 @* Making the submiting of the form working with ajax *@
-<form asp-controller="Posts" asp-action="Create" data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="post">
+<form asp-controller="Person" asp-action="CreatePost" data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="post">
     <div class="new-postbox">
         <figure>
             <img src="images\resources\admin2.jpeg" alt="">

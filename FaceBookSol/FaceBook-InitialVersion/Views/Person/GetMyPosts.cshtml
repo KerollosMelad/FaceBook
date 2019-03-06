@@ -30,7 +30,7 @@
                                 <li>
                                     <span class="comment" data-toggle="tooltip" title="Comments">
                                         <i class="fa fa-comments-o"></i>
-                                        <ins>@item.UserPostComments.Where(c => c.Comment.State == Enums.CommentStatus.Active)?.Count()</ins>
+                                        <ins>@item.UserPostComments.Where(c => c.Comment.State == Enums.CommentStatus.Active).Count()</ins>
                                     </span>
                                 </li>
                                 <li>
@@ -38,21 +38,21 @@
                                     @if (!item.UserPostLikes.Where(u => u.PostID == item.ID && u.UserID == UserManager.GetUserId(User)).Any())
                                     {
 
-                                        <a asp-action="Like" asp-route-id="@item.ID"
+                                        <a asp-controller="Person" asp-action="Like" asp-route-id="@item.ID"
                                            data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="get">
                                             <span class="like" @*data-toggle="tooltip" *@ title="like">
                                                 <i class="ti-heart text-red"></i>
-                                                <ins>@item.UserPostLikes.Where(p => p.PostID == item.ID)?.Count()</ins>
+                                                <ins>@item.UserPostLikes.Where(p => p.PostID == item.ID).Count()</ins>
                                             </span>
                                         </a>
                                     }
                                     else
                                     {
-                                        <a asp-action="Like" asp-route-id="@item.ID"
+                                        <a asp-controller="Person" asp-action="Like" asp-route-id="@item.ID"
                                            data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="get">
                                             <span class="dislike" @*data-toggle="tooltip" *@ title="dislike">
                                                 <i class="ti-heart-broken"></i>
-                                                <ins>@item.UserPostLikes.Where(p => p.PostID == item.ID)?.Count()</ins>
+                                                <ins>@item.UserPostLikes.Where(p => p.PostID == item.ID).Count()</ins>
                                             </span>
                                         </a>
                                     }
@@ -65,7 +65,7 @@
                                               .Select(u => u.Id)
                                               .FirstOrDefault())
                                     {
-                                        <a asp-action="Delete" asp-route-id="@item.ID"
+                                        <a asp-controller="Person" asp-action="DeletePost" asp-route-id="@item.ID"
                                            data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="get">
 
                                             <span class="trash" title="delete">
@@ -102,7 +102,7 @@
                                                        .Select(u => u.Id)
                                                        .FirstOrDefault())
                                                 {
-                                                    <a asp-action="DeleteComment" asp-controller="Posts" asp-route-id="@comment.CommentID"
+                                                    <a asp-action="DeleteComment" asp-controller="Person" asp-route-id="@comment.CommentID"
                                                        data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="get" title="delete comment"><i class="fa fa-trash-o"></i></a>
                                                 }
                                             </div>
@@ -120,7 +120,7 @@
                                 <img src="images\resources\comet-1.jpeg" alt="">
                             </div>
                             <div class="post-comt-box">
-                                <form asp-action="AddComment" asp-controller="Posts"
+                                <form asp-action="AddComment" asp-controller="Person"
                                       data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace"
                                       data-method="post" asp-route-postId="@item.ID">
                                     <textarea placeholder="Post your comment" name="commentBody"></textarea>

@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using System.IO;
+using static FaceBook_InitialVersion.Models.Enums;
+using Microsoft.AspNetCore.Identity;
 
 namespace FaceBook_InitialVersion.Controllers
 {
@@ -15,15 +17,18 @@ namespace FaceBook_InitialVersion.Controllers
     {
         private readonly ApplicationDbContext _db;
         private readonly IHostingEnvironment _he;
+        private readonly UserManager<Person> _userManager;
+
 
         [BindProperty]
         // model view to present (profile&home) pages 
         public PersonModelView PersonMV { get; set; }
 
-        public PersonController(ApplicationDbContext DB, IHostingEnvironment HE)
+        public PersonController(ApplicationDbContext DB, IHostingEnvironment HE, UserManager<Person> userManager)
         {
             _db = DB;
             _he = HE;
+            _userManager = userManager;
         }
 
         public IActionResult Index()
@@ -35,7 +40,7 @@ namespace FaceBook_InitialVersion.Controllers
         {
             PersonMV = GetPersonModel(UserName);
             // join my posts and friendsPosts 
-            PersonMV.FriendPosts = (PersonMV.FriendPosts.Union(PersonMV.MyPosts)).OrderBy(P => P.CreationDate).ToList();
+            PersonMV.FriendPosts = (PersonMV.FriendPosts.Union(PersonMV.MyPosts)).OrderByDescending(P => P.CreationDate).ToList();
             return View(PersonMV);
         }
 
@@ -362,6 +367,9 @@ namespace FaceBook_InitialVersion.Controllers
 
             var _currentUser = _db.Users
                                .Include(P => P.Posts)
+                               .Include("Posts.UserPostLikes")
+                               .Include("Posts.UserPostComments.Comment")
+                               .Include("Posts.UserPostComments.User")
                                .Include("FriendsRequest.User")
                                .Include("MyRequests.Friend")
                                .Where(P => P.UserName == userName)
@@ -380,7 +388,7 @@ namespace FaceBook_InitialVersion.Controllers
             PersonModelView modelView = new PersonModelView()
             {
                 CurrentUser = _currentUser,
-                MyPosts = _currentUser?.Posts.OrderBy(P => P.CreationDate).ToList(),
+                MyPosts = _currentUser?.Posts.OrderByDescending(P => P.CreationDate).ToList(),
 
                 // check the login person             
                 FriendPosts = User.Identity.Name == userName ?                                                               // ternary operator
@@ -410,6 +418,102 @@ namespace FaceBook_InitialVersion.Controllers
 
             // in friend request to you mean => (user => how sent the request, friend => you (how received the request))
             return _db.Friendships.FirstOrDefault(F => F.Friend.UserName == currentUserName && F.User.UserName == friendUserName);
+        }
+
+        /* Posts Area */
+        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreatePost([Bind("ID,Body")] Post post)
+        {
+            if (ModelState.IsValid)
+            {
+                post.UserID = _userManager.GetUserId(User);
+                post.CreationDate = DateTime.Now;
+                post.State = PostStatus.Active;
+                _db.Add(post);
+                await _db.SaveChangesAsync();
+                //return RedirectToAction(nameof(Index));
+                return PartialView("GetMyPosts", await _db.Posts.Where(u => u.User.UserName == User.Identity.Name).Include(p => p.User).Include(u => u.UserPostLikes).Include(u => u.UserPostComments).ThenInclude(c => c.Comment).Include(u => u.UserPostComments).ThenInclude(u => u.User).OrderByDescending(p => p.CreationDate).ToListAsync());
+
+            }
+            //return View(post);
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> DeletePost(int id)
+        {
+            var post = await _db.Posts.FindAsync(id);
+            //_context.Posts.Remove(post);
+            post.State = PostStatus.Deleted;
+            _db.Update(post);
+            await _db.SaveChangesAsync();
+            //return PartialView("GetAll", await _context.Posts.Include(p => p.User).Include(u => u.UserPostLikes).ToListAsync());
+            return PartialView("GetMyPosts", await _db.Posts.Where(u => u.User.UserName == User.Identity.Name).Include(p => p.User).Include(u => u.UserPostLikes).Include(u => u.UserPostComments).ThenInclude(c => c.Comment).Include(u => u.UserPostComments).ThenInclude(u => u.User).OrderByDescending(p => p.CreationDate).ToListAsync());
+
+        }
+
+        public async Task<IActionResult> Like(int id)
+        {
+            var post = await _db.Posts.Include(l => l.UserPostLikes).Where(p => p.ID == id).FirstOrDefaultAsync();
+
+            // Check if the user already liked this post ... if not add his ID and Post's ID to the UserPostLikes
+            if (!post.UserPostLikes.Where(u => u.PostID == id && u.UserID == _userManager.GetUserId(User)).Any())
+            {
+                post.UserPostLikes.Add(new UserPostLike
+                {
+                    PostID = post.ID,
+                    UserID = _userManager.GetUserId(User)
+                });
+
+                _db.Update(post);
+                await _db.SaveChangesAsync();
+            }
+            else
+            {
+                post.UserPostLikes.Remove(
+                    post.UserPostLikes.FirstOrDefault(u => u.PostID == post.ID && u.UserID == _userManager.GetUserId(User)));
+                await _db.SaveChangesAsync();
+            }
+
+            //return PartialView("GetAll", await _db.Posts.Include(p => p.User).Include(u => u.UserPostLikes).ToListAsync());
+            return PartialView("GetMyPosts", await _db.Posts.Where(u => u.User.UserName == User.Identity.Name).Include(p => p.User).Include(u => u.UserPostLikes).Include(u => u.UserPostComments).ThenInclude(c => c.Comment).OrderByDescending(p => p.CreationDate).ToListAsync());
+
+        }
+
+        public async Task<IActionResult> AddComment(String commentBody, int postId)
+        {
+            var comment = new Comment()
+            {
+
+                Body = commentBody,
+                CreationDate = DateTime.Now,
+                State = CommentStatus.Active
+
+            };
+            _db.Comments.Add(comment);
+            _db.SaveChanges();
+            var x = comment.ID;
+
+            var userPostComment = new UserPostComment()
+            {
+                CommentID = comment.ID,
+                PostID = postId,
+                userID = _userManager.GetUserId(User)
+            };
+            _db.UserPostComments.Add(userPostComment);
+            _db.SaveChanges();
+            //var commentId = _db.Comments.Where(c => c.CreationDate == comment.CreationDate).Select(c => c.ID).FirstOrDefault();
+            return PartialView("GetMyPosts", await _db.Posts.Where(u => u.User.UserName == User.Identity.Name).Include(p => p.User).Include(u => u.UserPostLikes).Include(u => u.UserPostComments).ThenInclude(c => c.Comment).Include(u => u.UserPostComments).ThenInclude(u => u.User).OrderByDescending(p => p.CreationDate).ToListAsync());
+        }
+
+        public async Task<IActionResult> DeleteComment(int id)
+        {
+            var comment = await _db.Comments.FindAsync(id);
+            comment.State = CommentStatus.Deleted;
+            _db.Update(comment);
+            await _db.SaveChangesAsync();
+            return PartialView("GetMyPosts", await _db.Posts.Where(u => u.User.UserName == User.Identity.Name).Include(p => p.User).Include(u => u.UserPostLikes).Include(u => u.UserPostComments).ThenInclude(c => c.Comment).Include(u => u.UserPostComments).ThenInclude(u => u.User).OrderByDescending(p => p.CreationDate).ToListAsync());
         }
     }
 }
