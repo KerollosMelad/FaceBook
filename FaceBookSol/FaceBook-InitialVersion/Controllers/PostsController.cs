@@ -144,6 +144,8 @@ namespace FaceBook_InitialVersion.Controllers
                 await _context.SaveChangesAsync();
                 ////return RedirectToAction(nameof(Index));
                 ///
+                PersonMV = GetPersonModel();
+
                 var posts = PersonMV.MyPosts.Union(PersonMV.FriendPosts).ToList();
 
                 return PartialView("GetAll", posts);
@@ -222,6 +224,8 @@ namespace FaceBook_InitialVersion.Controllers
             _context.Update(post);
             await _context.SaveChangesAsync();
             //return PartialView("GetAll", await _context.Posts.Include(p => p.User).Include(u => u.UserPostLikes).ToListAsync());
+            PersonMV = GetPersonModel();
+
             var posts = PersonMV.MyPosts.Union(PersonMV.FriendPosts).ToList();
 
             return PartialView("GetAll", posts);
@@ -262,6 +266,8 @@ namespace FaceBook_InitialVersion.Controllers
             }
 
             //return PartialView("GetAll", await _context.Posts.Include(p => p.User).Include(u => u.UserPostLikes).ToListAsync());
+            PersonMV = GetPersonModel();
+
             var posts = PersonMV.MyPosts.Union(PersonMV.FriendPosts).ToList();
 
             return PartialView("GetAll", posts);
@@ -307,6 +313,8 @@ namespace FaceBook_InitialVersion.Controllers
             _context.UserPostComments.Add(userPostComment);
             _context.SaveChanges();
             //var commentId = _context.Comments.Where(c => c.CreationDate == comment.CreationDate).Select(c => c.ID).FirstOrDefault();
+            PersonMV = GetPersonModel();
+
             var posts = PersonMV.MyPosts.Union(PersonMV.FriendPosts).ToList();
 
             return PartialView("GetAll", posts);
@@ -328,9 +336,11 @@ namespace FaceBook_InitialVersion.Controllers
             comment.State = CommentStatus.Deleted;
             _context.Update(comment);
             await _context.SaveChangesAsync();
+            PersonMV = GetPersonModel();
+
             var posts = PersonMV.MyPosts.Union(PersonMV.FriendPosts).ToList();
 
-            return PartialView("GetAll", posts);
+            return PartialView("GetAll", PersonMV.MyPosts.Union(PersonMV.FriendPosts).ToList());
 
             //return PartialView("GetAll", await _context.Posts
             //                                            .Include(p => p.User)
