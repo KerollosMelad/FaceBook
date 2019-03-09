@@ -16,7 +16,7 @@
                         <img src="@item.User.userphoto" width="60" height="60" alt="">
                     </figure>
                     <div class="friend-name">
-                        <ins><a href="#" title="">@item.User.FirstName @item.User.LastName</a></ins>
+                        <ins><a asp-controller="Person" asp-action="Profile"  asp-route-UserName="@item.User.UserName" title="">@item.User.FirstName @item.User.LastName</a></ins>
                         <span>published: @item.CreationDate.ToString("MMMM dd, yyyy") at @item.CreationDate.ToString("HH:mm tt")</span>
                     </div>
                     <div class="post-meta">
@@ -95,7 +95,7 @@
                                         </div>
                                         <div class="we-comment">
                                             <div class="coment-head">
-                                                <h5><a href="time-line.html" title="">@comment.User.FirstName @comment.User.LastName</a></h5>
+                                                <h5><a asp-controller="Person" asp-action="Profile"  asp-route-UserName="@comment.User.UserName" title="">@comment.User.FirstName @comment.User.LastName</a></h5>
                                                 <span>@comment.Comment.CreationDate.ToString("MMMM dd,yyyy") at @comment.Comment.CreationDate.ToString("HH:mm tt")</span>
                                                 @if (comment.userID == @UserManager.Users
                                                        .Where(u => u.UserName == User.Identity.Name)
