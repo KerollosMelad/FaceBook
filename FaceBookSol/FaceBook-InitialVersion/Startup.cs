@@ -58,6 +58,11 @@ namespace FaceBook_InitialVersion
             .AddDefaultTokenProviders()
             .AddDefaultUI();  //use your default UI for authentication 
             /////////////////////////////////////////////////////////////////
+            ///
+            /// add session to the project
+            services.AddSession(options => {
+                options.IdleTimeout = TimeSpan.FromHours(1);
+            });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
@@ -83,6 +88,9 @@ namespace FaceBook_InitialVersion
 
             // add authentication as middlware in the piple line 
             app.UseAuthentication();
+
+            /// using the session
+            app.UseSession();
 
             app.UseMvc(routes =>
             {

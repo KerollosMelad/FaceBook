@@ -13,7 +13,7 @@
             <div class="user-post">
                 <div class="friend-info">
                     <figure>
-                        <img src="images\resources\friend-avatar10.jpeg" alt="">
+                        <img src="@item.User.userphoto" width="60" height="60" alt="">
                     </figure>
                     <div class="friend-name">
                         <ins><a href="#" title="">@item.User.FirstName @item.User.LastName</a></ins>
@@ -30,8 +30,9 @@
                                 <li>
                                     <span class="comment" data-toggle="tooltip" title="Comments">
                                         <i class="fa fa-comments-o"></i>
-                                        <ins>@item.UserPostComments.Where(c => c.Comment.State == Enums.CommentStatus.Active)?.Count()</ins>
                                     </span>
+                                    <a class="counter" style="text-decoration:none !important;" href="http://www.google.com"><ins>@item.UserPostComments.Where(c => c.Comment.State == Enums.CommentStatus.Active)?.Count()</ins></a>
+
                                 </li>
                                 <li>
                                     @* Show likes counter *@
@@ -42,9 +43,10 @@
                                            data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="get">
                                             <span class="like" @*data-toggle="tooltip" *@ title="like">
                                                 <i class="ti-heart text-red"></i>
-                                                <ins>@item.UserPostLikes.Where(p => p.PostID == item.ID)?.Count()</ins>
                                             </span>
                                         </a>
+                                        <a class="counter" style="text-decoration:none !important;" href="http://www.google.com"><ins>@item.UserPostLikes.Where(p => p.PostID == item.ID)?.Count()</ins></a>
+
                                     }
                                     else
                                     {
@@ -52,9 +54,11 @@
                                            data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="get">
                                             <span class="dislike" @*data-toggle="tooltip" *@ title="dislike">
                                                 <i class="ti-heart-broken"></i>
-                                                <ins>@item.UserPostLikes.Where(p => p.PostID == item.ID)?.Count()</ins>
                                             </span>
                                         </a>
+                                        <a class="counter" style="text-decoration:none !important;" href="http://www.google.com"><ins>@item.UserPostLikes.Where(p => p.PostID == item.ID)?.Count()</ins></a>
+
+
                                     }
 
                                 </li>
@@ -91,7 +95,7 @@
                                     <li>
                                         @*<partial name="_CommentPartial" model="@comment" />*@
                                         <div class="comet-avatar">
-                                            <img src="images\resources\comet-1.jpeg" alt="">
+                                            <img src="@comment.User.userphoto" width="45" height="45" alt="">
                                         </div>
                                         <div class="we-comment">
                                             <div class="coment-head">
@@ -117,7 +121,7 @@
                         </li>
                         <li class="post-comment">
                             <div class="comet-avatar">
-                                <img src="images\resources\comet-1.jpeg" alt="">
+                                <img src="@UserManager.Users.Where(u => u.UserName == User.Identity.Name).Select(u => u.userphoto).FirstOrDefault()" width="45" height="45" alt="">
                             </div>
                             <div class="post-comt-box">
                                 <form asp-action="AddComment" asp-controller="Posts"

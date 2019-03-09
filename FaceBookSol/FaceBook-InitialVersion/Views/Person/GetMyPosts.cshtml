@@ -13,7 +13,7 @@
             <div class="user-post">
                 <div class="friend-info">
                     <figure>
-                        <img src="images\resources\friend-avatar10.jpeg" alt="">
+                        <img src="@item.User.userphoto" width="60" height="60" alt="">
                     </figure>
                     <div class="friend-name">
                         <ins><a href="#" title="">@item.User.FirstName @item.User.LastName</a></ins>
@@ -91,7 +91,7 @@
                                     <li>
                                         @*<partial name="_CommentPartial" model="@comment" />*@
                                         <div class="comet-avatar">
-                                            <img src="images\resources\comet-1.jpeg" alt="">
+                                            <img src="@comment.User.userphoto" width="45" height="45" alt="">
                                         </div>
                                         <div class="we-comment">
                                             <div class="coment-head">
@@ -117,7 +117,7 @@
                         </li>
                         <li class="post-comment">
                             <div class="comet-avatar">
-                                <img src="images\resources\comet-1.jpeg" alt="">
+                                <img src="@UserManager.Users.Where(u => u.UserName == User.Identity.Name).Select(u => u.userphoto).FirstOrDefault()" width="45" height="45" alt="">
                             </div>
                             <div class="post-comt-box">
                                 <form asp-action="AddComment" asp-controller="Person"

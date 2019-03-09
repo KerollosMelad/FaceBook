@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using System.IO;
 using static FaceBook_InitialVersion.Models.Enums;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Http;
 
 namespace FaceBook_InitialVersion.Controllers
 {
@@ -87,6 +88,7 @@ namespace FaceBook_InitialVersion.Controllers
                 return NotFound();
             }
 
+            HttpContext.Session.SetString("UserName", UserName);
             return View(PersonMV);
         }
 
@@ -434,7 +436,7 @@ namespace FaceBook_InitialVersion.Controllers
                 _db.Add(post);
                 await _db.SaveChangesAsync();
                 //return RedirectToAction(nameof(Index));
-                return PartialView("GetMyPosts", await _db.Posts.Where(u => u.User.UserName == User.Identity.Name).Include(p => p.User).Include(u => u.UserPostLikes).Include(u => u.UserPostComments).ThenInclude(c => c.Comment).Include(u => u.UserPostComments).ThenInclude(u => u.User).OrderByDescending(p => p.CreationDate).ToListAsync());
+                return PartialView("GetMyPosts", await _db.Posts.Where(u => u.User.UserName == HttpContext.Session.GetString("UserName")).Include(p => p.User).Include(u => u.UserPostLikes).Include(u => u.UserPostComments).ThenInclude(c => c.Comment).Include(u => u.UserPostComments).ThenInclude(u => u.User).OrderByDescending(p => p.CreationDate).ToListAsync());
 
             }
             //return View(post);
@@ -449,7 +451,7 @@ namespace FaceBook_InitialVersion.Controllers
             _db.Update(post);
             await _db.SaveChangesAsync();
             //return PartialView("GetAll", await _context.Posts.Include(p => p.User).Include(u => u.UserPostLikes).ToListAsync());
-            return PartialView("GetMyPosts", await _db.Posts.Where(u => u.User.UserName == User.Identity.Name).Include(p => p.User).Include(u => u.UserPostLikes).Include(u => u.UserPostComments).ThenInclude(c => c.Comment).Include(u => u.UserPostComments).ThenInclude(u => u.User).OrderByDescending(p => p.CreationDate).ToListAsync());
+            return PartialView("GetMyPosts", await _db.Posts.Where(u => u.User.UserName == HttpContext.Session.GetString("UserName")).Include(p => p.User).Include(u => u.UserPostLikes).Include(u => u.UserPostComments).ThenInclude(c => c.Comment).Include(u => u.UserPostComments).ThenInclude(u => u.User).OrderByDescending(p => p.CreationDate).ToListAsync());
 
         }
 
@@ -477,7 +479,7 @@ namespace FaceBook_InitialVersion.Controllers
             }
 
             //return PartialView("GetAll", await _db.Posts.Include(p => p.User).Include(u => u.UserPostLikes).ToListAsync());
-            return PartialView("GetMyPosts", await _db.Posts.Where(u => u.User.UserName == User.Identity.Name).Include(p => p.User).Include(u => u.UserPostLikes).Include(u => u.UserPostComments).ThenInclude(c => c.Comment).OrderByDescending(p => p.CreationDate).ToListAsync());
+            return PartialView("GetMyPosts", await _db.Posts.Where(u => u.User.UserName == HttpContext.Session.GetString("UserName")).Include(p => p.User).Include(u => u.UserPostLikes).Include(u => u.UserPostComments).ThenInclude(c => c.Comment).Include(u => u.UserPostComments).ThenInclude(u => u.User).OrderByDescending(p => p.CreationDate).ToListAsync());
 
         }
 
@@ -504,7 +506,7 @@ namespace FaceBook_InitialVersion.Controllers
             _db.UserPostComments.Add(userPostComment);
             _db.SaveChanges();
             //var commentId = _db.Comments.Where(c => c.CreationDate == comment.CreationDate).Select(c => c.ID).FirstOrDefault();
-            return PartialView("GetMyPosts", await _db.Posts.Where(u => u.User.UserName == User.Identity.Name).Include(p => p.User).Include(u => u.UserPostLikes).Include(u => u.UserPostComments).ThenInclude(c => c.Comment).Include(u => u.UserPostComments).ThenInclude(u => u.User).OrderByDescending(p => p.CreationDate).ToListAsync());
+            return PartialView("GetMyPosts", await _db.Posts.Where(u => u.User.UserName == HttpContext.Session.GetString("UserName")).Include(p => p.User).Include(u => u.UserPostLikes).Include(u => u.UserPostComments).ThenInclude(c => c.Comment).Include(u => u.UserPostComments).ThenInclude(u => u.User).OrderByDescending(p => p.CreationDate).ToListAsync());
         }
 
         public async Task<IActionResult> DeleteComment(int id)
@@ -513,7 +515,7 @@ namespace FaceBook_InitialVersion.Controllers
             comment.State = CommentStatus.Deleted;
             _db.Update(comment);
             await _db.SaveChangesAsync();
-            return PartialView("GetMyPosts", await _db.Posts.Where(u => u.User.UserName == User.Identity.Name).Include(p => p.User).Include(u => u.UserPostLikes).Include(u => u.UserPostComments).ThenInclude(c => c.Comment).Include(u => u.UserPostComments).ThenInclude(u => u.User).OrderByDescending(p => p.CreationDate).ToListAsync());
+            return PartialView("GetMyPosts", await _db.Posts.Where(u => u.User.UserName == HttpContext.Session.GetString("UserName")).Include(p => p.User).Include(u => u.UserPostLikes).Include(u => u.UserPostComments).ThenInclude(c => c.Comment).Include(u => u.UserPostComments).ThenInclude(u => u.User).OrderByDescending(p => p.CreationDate).ToListAsync());
         }
     }
 }
