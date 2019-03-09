@@ -156,12 +156,14 @@
                             </div><!-- sidebar -->
                             @if (SignInManager.IsSignedIn(User))
                             {
-                                <div class="col-lg-6">
+                            <div class="col-lg-6">
+                                @if (User.Identity.Name == Model.CurrentUser.UserName)
+                                {
                                     <div class="central-meta">
                                         @* Here we send New Post as Model to the partial view so we can work on it there *@
                                         <partial name="_CreatePostBox" model="new Post()" />
                                     </div><!-- add post new box -->
-
+                                }
                                     <div class="loadMore">
                                         <div id="MyPosts">
                                             <partial name="GetMyPosts" model="Model.MyPosts" />

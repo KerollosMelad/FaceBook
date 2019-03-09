@@ -3,9 +3,9 @@
 
 // Write your JavaScript code.
 /*--- emojies show on text area ---*/
-$("#MyPosts").on("click", '.add-smiles > span', function () {
-    $(this).parent().siblings(".smiles-bunch").toggleClass("active");
-});
+//$("#MyPosts").on("click", '.add-smiles > span', function () {
+//    $(".add-smiles > span").parent().siblings(".smiles-bunch").toggleClass("active");
+//});
 
 jQuery("#MyPosts").on("keydown", ".post-comt-box textarea", function (event) {
 
