@@ -454,7 +454,9 @@ namespace FaceBook_InitialVersion.Controllers
             PersonModelView modelView = new PersonModelView()
             {
                 CurrentUser = _currentUser,
-                MyPosts = _currentUser?.Posts.OrderByDescending(P => P.CreationDate).ToList(),
+                MyPosts =   User.Identity.Name == userName ?
+                            _currentUser?.Posts.OrderByDescending(P => P.CreationDate).ToList()
+                            : new List<Post>(),
 
                 // check the login person             
                 FriendPosts = User.Identity.Name == userName ?                                                               // ternary operator
@@ -541,8 +543,6 @@ namespace FaceBook_InitialVersion.Controllers
                     post.UserPostLikes.FirstOrDefault(u => u.PostID == post.ID && u.UserID == _userManager.GetUserId(User)));
                 await _db.SaveChangesAsync();
             }
-
-            //string x = HttpContext.Session.GetString("UserName");
             //return PartialView("GetAll", await _db.Posts.Include(p => p.User).Include(u => u.UserPostLikes).ToListAsync());
             return PartialView("GetMyPosts", _db.Posts.Where(u => u.User.UserName == HttpContext.Session.GetString("UserName")).Include(p => p.User).Include(u => u.UserPostLikes).Include(u => u.UserPostComments).ThenInclude(c => c.Comment).Include(u => u.UserPostComments).ThenInclude(u => u.User).OrderByDescending(p => p.CreationDate).ToList());
 
