@@ -75,15 +75,15 @@ namespace FaceBook_InitialVersion.Areas.Identity.Pages.Account
             [DataType(DataType.Date)]
             public DateTime BirthDay { get; set; }
             [Required]
-            [Display(Name ="Gender")]
+            [Display(Name = "Gender")]
             public Gender Gender { get; set; }
-            
+
             [Display(Name = "Role")]
             public UserType role { get; set; }
 
         }
 
-        public void OnGet(string returnUrl = null )
+        public void OnGet(string returnUrl = null)
         {
             ReturnUrl = returnUrl;
         }
@@ -93,6 +93,10 @@ namespace FaceBook_InitialVersion.Areas.Identity.Pages.Account
             returnUrl = returnUrl ?? Url.Content("~/");
             if (ModelState.IsValid)
             {
+                string photoMale = @"\images\profile-photo-default-male.png";
+                string photoFemale = @"\images\profile-photo-default-female.png";
+
+                string usrImg = (Input.Gender == Gender.Male) ? photoMale : photoFemale;
                 var user = new Person
                 {
                     UserName = Input.Email,
@@ -101,13 +105,14 @@ namespace FaceBook_InitialVersion.Areas.Identity.Pages.Account
                     LastName = Input.LastName,
                     BirthDay = Input.BirthDay,
                     Gender = Input.Gender,
-                    State=Enums.UserStatus.Active,
-                    //userphoto = 
+                    State = Enums.UserStatus.Active,
+                    userphoto = usrImg,
+
                 };
                 var result = await _userManager.CreateAsync(user, Input.Password);
-                if (result.Succeeded )
+                if (result.Succeeded)
                 {
-                    if(!await _roleManager.RoleExistsAsync("Member"))
+                    if (!await _roleManager.RoleExistsAsync("Member"))
                     {
                         await _roleManager.CreateAsync(new Role("Member"));
                     }
@@ -115,7 +120,7 @@ namespace FaceBook_InitialVersion.Areas.Identity.Pages.Account
                     {
                         await _roleManager.CreateAsync(new Role("Admin"));
                     }
-                    if ( Input.role == Enums.UserType.User)
+                    if (Input.role == Enums.UserType.User)
                     {
                         await _userManager.AddToRoleAsync(user, "Member");
                         if (User.IsInRole("Admin"))
@@ -140,7 +145,7 @@ namespace FaceBook_InitialVersion.Areas.Identity.Pages.Account
                     else
                     {
                         await _userManager.AddToRoleAsync(user, "Admin");
-                      return  RedirectToAction("Index", "Admin");
+                        return RedirectToAction("Index", "Admin");
                     }
                 }
                 foreach (var error in result.Errors)
