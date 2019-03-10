@@ -1,0 +1,55 @@
+﻿@model Person
+@{
+    ViewData["Title"] = "EditInfo";
+}
+
+<h1>EditInfo</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        <form method="post" asp-action="EditInfo" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="UserName" />
+            <br />
+            <div class="form-group">
+                <br />
+                <label class="control-label">Bio</label>
+                <br />
+                <input asp-for="Bio" style="background-color:dimgray" />
+                <span asp-validation-for="Bio" class="text-danger"></span>
+
+            </div>
+            <div class="form-group">
+                <label class="control-label">BirthDay</label>
+                <br />
+                <input asp-for="BirthDay" class="form-control" />
+                <span asp-validation-for="BirthDay" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">FirstName</label>
+                <br />
+                <input asp-for="FirstName" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">LastName</label>
+                <br />
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Gender" class="control-label"></label>
+                <br />
+                <select asp-for="Gender" asp-items="Html.GetEnumSelectList<Enums.Gender>()" class="form-control"></select>
+                <span asp-validation-for="Gender" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="userphoto"></label>
+                <input asp-for="userphoto" type="file" name="files" class="form-control" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>

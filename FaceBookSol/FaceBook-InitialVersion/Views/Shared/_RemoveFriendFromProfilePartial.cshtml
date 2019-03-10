@@ -1,0 +1,12 @@
+﻿@model Person
+
+<span>
+    <a class="add-btn" asp-controller="Person" asp-action="RemoveFriend"
+       asp-route-currentUserName="@User.Identity.Name"
+       asp-route-friendUserName="@Model.UserName"
+       asp-route-DefaultValue="1"
+       data-ajax="true" 
+       data-ajax-update="#friendshipState" 
+       data-ajax-mode="replace" 
+       data-method="post">Remove friend</a>
+</span>

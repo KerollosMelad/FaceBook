@@ -1,0 +1,28 @@
+﻿@model Person
+
+<span>
+    <a class="underline" asp-controller="Person" asp-action="ConfirmFriendRequest" asp-route-currentUserName="@User.Identity.Name" asp-route-FriendUserName="@Model.UserName"
+       data-ajax="true"
+       data-ajax-success="onConfirmFriendRequestSuccess('@Model.Id')"
+       data-method="post">Confirm</a>
+    <a class="underline" asp-controller="Person" asp-action="DeleteFriendRequest" asp-route-currentUserName="@User.Identity.Name" asp-route-FriendUserName="@Model.UserName"
+       data-ajax="true"
+       data-ajax-success="onDeleteFriendRequestSuccess('@Model.Id')"
+       data-method="post"> Delete</a>
+</span>
+
+<script>
+
+    function onConfirmFriendRequestSuccess(context) {
+        var s = '#' + context;
+        var il = $(s);
+        il.remove();
+    }
+
+    function onDeleteFriendRequestSuccess(context) {
+        var s = '#' + context;
+        var il = $(s);
+        il.remove();
+    }
+
+</script>

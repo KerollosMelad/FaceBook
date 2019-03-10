@@ -23,7 +23,9 @@ namespace FaceBook_InitialVersion.Models
         {
             Pending,
             Accepted,
-            Declined
+            Declined,
+            PendingFriendAccept         // if you sent request and waiting ... 
+
         }
 
         public enum PostStatus
@@ -40,8 +42,9 @@ namespace FaceBook_InitialVersion.Models
 
         public enum UserType
         {
-            Admin,
-            User
+            User,
+            Admin
+            
         }
 
         

@@ -1,0 +1,36 @@
+﻿@model Person
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<Person> SignInManager
+@inject UserManager<Person> UserManager
+
+
+<figure>
+    <!--  user Profile -->
+    <img src=@Model.userphoto alt="">
+
+    @{
+        if (SignInManager.IsSignedIn(User) && User.Identity.Name == @Model.UserName)
+        {
+
+            <form id="frmEditPhoto" class="edit-phto"
+                  asp-action="EditInfoPhoto" asp-controller="Person" enctype="multipart/form-data"
+                  data-ajax="true" data-ajax-update="#userProfilePhoto" data-ajax-mode="replace" data-method="post">
+                <i class="fa fa-camera-retro"></i>
+                <label class="fileContainer">
+                    Edit Display Photo
+                    <input id="inputFormEdit" type="file" name="files">
+                    <input id="SubmitFormEdit" type="submit" style="display:none" />
+                </label>
+            </form>
+            <script>
+
+                document.getElementById("inputFormEdit").onchange = function () {
+                    //document.getElementById("frmEditPhoto").submit();
+                    document.getElementById("SubmitFormEdit").click();
+                }
+
+
+            </script>
+        }
+        }
+</figure>

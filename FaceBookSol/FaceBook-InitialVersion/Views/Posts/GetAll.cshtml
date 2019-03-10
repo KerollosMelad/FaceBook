@@ -1,0 +1,187 @@
+﻿@model IEnumerable<FaceBook_InitialVersion.Models.Post>
+
+@using Microsoft.AspNetCore.Identity
+
+@inject UserManager<Person> UserManager
+
+
+@foreach (var item in Model)
+{
+
+    if (item.State == Enums.PostStatus.Active)
+    {
+        
+        <div class="central-meta item">
+            <div class="user-post">
+                <div class="friend-info">
+                    <figure>
+                        <img src="@item.User.userphoto" style="width:60px;height:54px;" alt="">
+                    </figure>
+                    <div class="friend-name">
+                        <ins><a asp-controller="Person" asp-action="Profile" asp-route-UserName="@item.User.UserName" title="">@item.User.FirstName @item.User.LastName</a></ins>
+                        <span>published: @item.CreationDate.ToString("MMMM dd, yyyy") at @item.CreationDate.ToString("HH:mm tt")</span>
+                    </div>
+                    <div class="post-meta">
+                        @*<img src="images\resources\user-post.jpeg" alt="">*@
+                        <div class="description">
+
+                            <p>@item.Body</p>
+                        </div>
+                        <div class="g-post-ranking">
+                            @if (!item.UserPostLikes.Where(u => u.PostID == item.ID && u.UserID == UserManager.GetUserId(User)).Any())
+                            {
+                                <a style="margin-right:0;" title=""asp-action="Like" asp-route-id="@item.ID"
+                                           data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="get" class="likes"><i class="fa fa-heart-o"></i></a>
+                            }
+                            else
+                            {
+                                <a style="margin-right:0;" title="" asp-action="Like" asp-route-id="@item.ID"
+                                           data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="get" class="likes"><i class="fa fa-heart" style="color:cornflowerblue;"></i></a>
+                            }
+
+                            <a data-toggle="modal" data-target=@("#myModal"+item.ID)>@item.UserPostLikes.Where(p => p.PostID == item.ID)?.Count() likes</a>
+                            
+                            <a title="" href="#" class="coments"><i class="fa fa-comment-o"></i>@item.UserPostComments.Where(c => c.Comment.State == Enums.CommentStatus.Active)?.Count() comments</a>
+                            
+                            @if (item.User.UserName == User.Identity.Name)
+                            {
+                                <a asp-action="Delete" asp-route-id="@item.ID"
+                                   data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="get">
+
+                                    <span class="trash" title="delete">
+                                        <i class="fa fa-trash-o" style="color:red;"></i>
+                                    </span>
+                                </a>
+                            }
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="coment-area">
+                    <ul class="we-comet">
+                        @* Check if the post has comments then show these comments *@
+                        @if (item.UserPostComments?.Count > 0)
+                        {
+                            @foreach (var comment in item.UserPostComments.OrderBy(c => c.Comment.CreationDate))
+                            {
+                                if (comment.Comment.State == Enums.CommentStatus.Active)
+                                {
+                                    <li>
+                                        @*<partial name="_CommentPartial" model="@comment" />*@
+                                        <div class="comet-avatar">
+                                            <img src="@comment.User.userphoto" style="width:45px;height:45px;" alt="">
+                                        </div>
+                                        <div class="we-comment">
+                                            <div class="coment-head">
+                                                <h5><a asp-controller="Person" asp-action="Profile" asp-route-UserName="@comment.User.UserName" title="">@comment.User.FirstName @comment.User.LastName</a></h5>
+                                                <span>@comment.Comment.CreationDate.ToString("MMMM dd,yyyy") at @comment.Comment.CreationDate.ToString("HH:mm tt")</span>
+                                                @if (comment.User.UserName == User.Identity.Name)
+                                                {
+                                                    <a asp-action="DeleteComment" asp-controller="Posts" asp-route-id="@comment.CommentID"
+                                                       data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="get" title="delete comment"><i class="fa fa-trash-o"></i></a>
+                                                }
+                                            </div>
+                                            <p>@comment.Comment.Body</p>
+                                        </div>
+                                    </li>
+                                }
+                            }
+                        }
+                        <li>
+                            <a href="#" title="" class="showmore underline">more comments</a>
+                        </li>
+                        <li class="post-comment">
+                            <div class="comet-avatar">
+                                <img src="@UserManager.Users.Where(u => u.UserName == User.Identity.Name).Select(u => u.userphoto).FirstOrDefault()" style="width:45px;height:45px;" alt="">
+                            </div>
+                            <div class="post-comt-box">
+                                <form asp-action="AddComment" asp-controller="Posts"
+                                      data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace"
+                                      data-method="post" asp-route-postId="@item.ID">
+                                    <textarea placeholder="Post your comment" name="commentBody"></textarea>
+                                    <div class="add-smiles">
+                                        <span class="em em-expressionless" title="add icon"></span>
+                                    </div>
+                                    <div class="smiles-bunch">
+                                        <i class="em em---1"></i>
+                                        <i class="em em-smiley"></i>
+                                        <i class="em em-anguished"></i>
+                                        <i class="em em-laughing"></i>
+                                        <i class="em em-angry"></i>
+                                        <i class="em em-astonished"></i>
+                                        <i class="em em-blush"></i>
+                                        <i class="em em-disappointed"></i>
+                                        <i class="em em-worried"></i>
+                                        <i class="em em-kissing_heart"></i>
+                                        <i class="em em-rage"></i>
+                                        <i class="em em-stuck_out_tongue"></i>
+                                    </div>
+                                    <button type="submit"></button>
+                                </form>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        
+        <style>
+
+            .modal {
+                background-color: rgba(0, 0, 0, 0.5);
+            }
+
+            .modal-backdrop {
+                position: relative;
+            }
+        </style>
+
+        <div class="modal fade" id=@("myModal"+item.ID) role="dialog">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="col-lg-12">
+                            <div class="central-meta">
+                                <div class="frnds">
+                                    <ul class="nav nav-tabs">
+                                        <li class="nav-item"><a class="active" href="#frends" data-toggle="tab">Likers</a> <span>@item.UserPostLikes.Where(p => p.PostID == item.ID)?.Count()</span></li>
+                                    </ul>
+
+                                    <!-- Tab panes -->
+                                    <div class="tab-content">
+                                        <div class="tab-pane active fade show " id="frends">
+                                            <ul class="nearby-contct">
+                                                @foreach (var user in item.UserPostLikes)
+                                                {
+                                                    <li>
+                                                        <div class="nearly-pepls">
+                                                            <figure>
+                                                                <a asp-controller="Person" asp-action="Profile" asp-route-UserName="@user.User.UserName" title=""><img src="@user.User.userphoto" style="width:60px;height:60px;" alt=""></a>
+                                                            </figure>
+                                                            <div class="pepl-info">
+                                                                <h4><a asp-controller="Person" asp-action="Profile" asp-route-UserName="@user.User.UserName" title="">@user.User.FirstName @user.User.LastName</a></h4>
+                                                                <span>@user.User.Type</span>
+                                                                <a asp-controller="Person" asp-action="Profile" asp-route-UserName="@user.User.UserName" title="" class="add-butn" data-ripple="">view profile</a>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                }
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- centerl meta -->
+                    </div>
+                   
+                </div>
+            </div>
+        </div>
+    }
+}
+

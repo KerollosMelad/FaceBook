@@ -1,0 +1,49 @@
+﻿@model IEnumerable<FaceBook_InitialVersion.Models.Post>
+
+@{
+    ViewData["Title"] = "Posts";
+}
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<Person> SignInManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <div class="col-lg-3">
+        <aside class="sidebar static">
+            <div class="widget stick-widget">
+                <h4 class="widget-title">Shortcuts</h4>
+                <ul class="naves">
+                    <li>
+                        <i class="ti-clipboard"></i>
+                        <a href="newsfeed.html" title="">News feed</a>
+                    </li>
+
+                    <li>
+                        <i class="ti-user"></i>
+                        <a href="timeline-friends.html" title="">friends</a>
+                    </li>
+
+                    <li>
+                        <i class="ti-power-off"></i>
+                        <a href="landing.html" title="">Logout</a>
+                    </li>
+                </ul>
+            </div><!-- Shortcuts -->
+        </aside>
+    </div><!-- sidebar -->
+
+    <div class="col-lg-6">
+        <div class="central-meta">
+            @* Here we send New Post as Model to the partial view so we can work on it there *@
+            
+            <partial name="_CreatePostBox" model="new Post()" />
+        </div><!-- add post new box -->
+
+        <div class="loadMore">
+            <div id="MyPosts">
+                <partial name="GetAll" model="Model" />
+            </div>
+        </div>
+    </div><!-- centerl meta -->
+
+}

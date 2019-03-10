@@ -1,0 +1,10 @@
+﻿@model IEnumerable<FaceBook_InitialVersion.Models.Post>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Home</h1>
+@foreach (var item in Model)
+{
+    <textarea> @item.Body  </textarea>
+}
