@@ -12,21 +12,18 @@
     <section>
         <div class="feature-photo">
             <figure>  <img src="~/images/timeline-1.jpeg" alt="can't load cover photo" /></figure>
-            <div class="add-btn">
+            @*<div class="add-btn">*@
                 @{
-                    <span style="    top: -83px;
-                        right: 20px;
-                        position: relative;
-                        float: right;">1205 followers</span>
+                    
                     if ((SignInManager.IsSignedIn(User)) && !(User.Identity.Name == @Model.CurrentUser.UserName))
                     {
                         // login person => User.Identity.Name
                         //@Model now is Map To friend
                         if (@Model.myFriends.Any(F => F.UserName == User.Identity.Name))
                         {
-                            <span id="friendshipState" style="    float: right;">
+                            <div id="friendshipState">
                                 <partial name="_RemoveFriendFromProfilePartial" model="@Model.CurrentUser" />
-                            </span>
+                            </div>
                         }
                         else if (@Model.CurrentUser.FriendsRequest.Any(F => F.User.UserName == User.Identity.Name))
                         {
@@ -51,7 +48,7 @@
                     }
 
                 }
-            </div>
+            @*</div>*@
             <form class="edit-phto">
                 <i class="fa fa-camera-retro"></i>
                 <label class="fileContainer">
