@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using System.IO;
 using Microsoft.AspNetCore.Authorization;
+using static FaceBook_InitialVersion.Models.Enums;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Http;
 
 namespace FaceBook_InitialVersion.Controllers
 {
@@ -17,15 +20,18 @@ namespace FaceBook_InitialVersion.Controllers
     {
         private readonly ApplicationDbContext _db;
         private readonly IHostingEnvironment _he;
+        private readonly UserManager<Person> _userManager;
+
 
         [BindProperty]
         // model view to present (profile&home) pages 
         public PersonModelView PersonMV { get; set; }
 
-        public PersonController(ApplicationDbContext DB, IHostingEnvironment HE)
+        public PersonController(ApplicationDbContext DB, IHostingEnvironment HE, UserManager<Person> userManager)
         {
             _db = DB;
             _he = HE;
+            _userManager = userManager;
         }
 
         public IActionResult Index()
@@ -37,7 +43,7 @@ namespace FaceBook_InitialVersion.Controllers
         {
             PersonMV = GetPersonModel(UserName);
             // join my posts and friendsPosts 
-            PersonMV.FriendPosts = (PersonMV.FriendPosts.Union(PersonMV.MyPosts)).OrderBy(P => P.CreationDate).ToList();
+            PersonMV.FriendPosts = (PersonMV.FriendPosts.Union(PersonMV.MyPosts)).OrderByDescending(P => P.CreationDate).ToList();
             return View(PersonMV);
         }
 
@@ -84,6 +90,7 @@ namespace FaceBook_InitialVersion.Controllers
                 return NotFound();
             }
 
+            HttpContext.Session.SetString("UserName", UserName);
             return View(PersonMV);
         }
 
@@ -198,7 +205,7 @@ namespace FaceBook_InitialVersion.Controllers
                 //file has been uploaded
                 string upload = Path.Combine(webRootePath, "images");
                 string extension = Path.GetExtension(files[0].FileName);
-                using (var filesStream = new FileStream(Path.Combine(upload, targetPerson.Id + extension), FileMode.Append))
+                using (var filesStream = new FileStream(Path.Combine(upload, targetPerson.Id + extension), FileMode.Create))
                 {
                     files[0].CopyTo(filesStream);
                 }
@@ -210,7 +217,7 @@ namespace FaceBook_InitialVersion.Controllers
             }
             await _db.SaveChangesAsync();
             //return RedirectToAction(nameof(Profile), new { @UserName = User.Identity.Name });
-            return PartialView("_UserProfilePhoto", targetPerson);
+            return PartialView("_UserProfilePhoto",targetPerson);
         }
 
 
@@ -236,7 +243,6 @@ namespace FaceBook_InitialVersion.Controllers
             _db.SaveChanges();
 
             return NoContent();
-
         }
 
         /// <summary>
@@ -257,6 +263,7 @@ namespace FaceBook_InitialVersion.Controllers
             //update friendship
             friendship.friendShipStatus = Enums.FriendShipStatus.Accepted;
             _db.SaveChanges();
+
 
             return NoContent();
         }
@@ -424,6 +431,11 @@ namespace FaceBook_InitialVersion.Controllers
 
             var _currentUser = _db.Users
                                .Include(P => P.Posts)
+                               //.Include("Posts.UserPostLikes")
+                               .Include("Posts.UserPostLikes.User.FriendsRequest")
+                               .Include("Posts.UserPostLikes.User.MyRequests")
+                               .Include("Posts.UserPostComments.Comment")
+                               .Include("Posts.UserPostComments.User")
                                .Include("FriendsRequest.User")
                                .Include("MyRequests.Friend")
                                .Where(P => P.UserName == userName)
@@ -442,7 +454,7 @@ namespace FaceBook_InitialVersion.Controllers
             PersonModelView modelView = new PersonModelView()
             {
                 CurrentUser = _currentUser,
-                MyPosts = _currentUser?.Posts.OrderBy(P => P.CreationDate).ToList(),
+                MyPosts = _currentUser?.Posts.OrderByDescending(P => P.CreationDate).ToList(),
 
                 // check the login person             
                 FriendPosts = User.Identity.Name == userName ?                                                               // ternary operator
@@ -474,19 +486,101 @@ namespace FaceBook_InitialVersion.Controllers
             return _db.Friendships.FirstOrDefault(F => F.Friend.UserName == currentUserName && F.User.UserName == friendUserName);
         }
 
-        public IActionResult FriendshipState(string friendUserName)
+        /* Posts Area */
+        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreatePost([Bind("ID,Body")] Post post)
         {
-            // get friendship
-            var friendship = GetFriendship(friendUserName, User.Identity.Name);
-            if (friendship == null)
+            if (ModelState.IsValid)
             {
-                return NotFound();
+                post.UserID = _userManager.GetUserId(User);
+                post.CreationDate = DateTime.Now;
+                post.State = PostStatus.Active;
+                _db.Add(post);
+                await _db.SaveChangesAsync();
+                //return RedirectToAction(nameof(Index));
+                return PartialView("GetMyPosts", await _db.Posts.Where(u => u.User.UserName == HttpContext.Session.GetString("UserName")).Include(p => p.User).Include(u => u.UserPostLikes).Include(u => u.UserPostComments).ThenInclude(c => c.Comment).Include(u => u.UserPostComments).ThenInclude(u => u.User).OrderByDescending(p => p.CreationDate).ToListAsync());
+
+            }
+            //return View(post);
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> DeletePost(int id)
+        {
+            var post = await _db.Posts.FindAsync(id);
+            //_context.Posts.Remove(post);
+            post.State = PostStatus.Deleted;
+            _db.Update(post);
+            await _db.SaveChangesAsync();
+            //return PartialView("GetAll", await _context.Posts.Include(p => p.User).Include(u => u.UserPostLikes).ToListAsync());
+            return PartialView("GetMyPosts", await _db.Posts.Where(u => u.User.UserName == HttpContext.Session.GetString("UserName")).Include(p => p.User).Include(u => u.UserPostLikes).Include(u => u.UserPostComments).ThenInclude(c => c.Comment).Include(u => u.UserPostComments).ThenInclude(u => u.User).OrderByDescending(p => p.CreationDate).ToListAsync());
+
+        }
+
+        public async Task<IActionResult> Like(int id)
+        {
+            var post = await _db.Posts.Include(l => l.UserPostLikes).Where(p => p.ID == id).FirstOrDefaultAsync();
+
+            // Check if the user already liked this post ... if not add his ID and Post's ID to the UserPostLikes
+            if (!post.UserPostLikes.Where(u => u.PostID == id && u.UserID == _userManager.GetUserId(User)).Any())
+            {
+                post.UserPostLikes.Add(new UserPostLike
+                {
+                    PostID = post.ID,
+                    UserID = _userManager.GetUserId(User)
+                });
+
+                _db.Update(post);
+                await _db.SaveChangesAsync();
+            }
+            else
+            {
+                post.UserPostLikes.Remove(
+                    post.UserPostLikes.FirstOrDefault(u => u.PostID == post.ID && u.UserID == _userManager.GetUserId(User)));
+                await _db.SaveChangesAsync();
             }
 
+            //string x = HttpContext.Session.GetString("UserName");
+            //return PartialView("GetAll", await _db.Posts.Include(p => p.User).Include(u => u.UserPostLikes).ToListAsync());
+            return PartialView("GetMyPosts", _db.Posts.Where(u => u.User.UserName == HttpContext.Session.GetString("UserName")).Include(p => p.User).Include(u => u.UserPostLikes).Include(u => u.UserPostComments).ThenInclude(c => c.Comment).Include(u => u.UserPostComments).ThenInclude(u => u.User).OrderByDescending(p => p.CreationDate).ToList());
 
+        }
 
+        public async Task<IActionResult> AddComment(String commentBody, int postId)
+        {
+            var comment = new Comment()
+            {
 
-            return RedirectToAction(nameof(Profile), new { @UserName = friendUserName });
+                Body = commentBody,
+                CreationDate = DateTime.Now,
+                State = CommentStatus.Active
+
+            };
+            _db.Comments.Add(comment);
+            _db.SaveChanges();
+            var x = comment.ID;
+
+            var userPostComment = new UserPostComment()
+            {
+                CommentID = comment.ID,
+                PostID = postId,
+                userID = _userManager.GetUserId(User)
+            };
+            _db.UserPostComments.Add(userPostComment);
+            _db.SaveChanges();
+            //var commentId = _db.Comments.Where(c => c.CreationDate == comment.CreationDate).Select(c => c.ID).FirstOrDefault();
+            return PartialView("GetMyPosts", await _db.Posts.Where(u => u.User.UserName == HttpContext.Session.GetString("UserName")).Include(p => p.User).Include(u => u.UserPostLikes).Include(u => u.UserPostComments).ThenInclude(c => c.Comment).Include(u => u.UserPostComments).ThenInclude(u => u.User).OrderByDescending(p => p.CreationDate).ToListAsync());
+        }
+
+        public async Task<IActionResult> DeleteComment(int id)
+        {
+            var comment = await _db.Comments.FindAsync(id);
+            comment.State = CommentStatus.Deleted;
+            _db.Update(comment);
+            await _db.SaveChangesAsync();
+            return PartialView("GetMyPosts", await _db.Posts.Where(u => u.User.UserName == HttpContext.Session.GetString("UserName")).Include(p => p.User).Include(u => u.UserPostLikes).Include(u => u.UserPostComments).ThenInclude(c => c.Comment).Include(u => u.UserPostComments).ThenInclude(u => u.User).OrderByDescending(p => p.CreationDate).ToListAsync());
         }
     }
 }
