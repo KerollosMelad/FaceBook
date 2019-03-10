@@ -101,7 +101,8 @@ namespace FaceBook_InitialVersion.Areas.Identity.Pages.Account
                     LastName = Input.LastName,
                     BirthDay = Input.BirthDay,
                     Gender = Input.Gender,
-                    State=Enums.UserStatus.Active
+                    State=Enums.UserStatus.Active,
+                    //userphoto = 
                 };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded )

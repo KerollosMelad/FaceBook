@@ -1,0 +1,28 @@
+﻿@*@model Enums.FriendShipStatus
+
+@{
+    // login person => User.Identity.Name
+    //@Model now is Map To friend
+    if (@Model.myFriends.Any(F => F.UserName == User.Identity.Name))
+    {
+        <partial name="_RemoveFriendFromProfilePartial" model="@Model.CurrentUser" />
+    }
+    else if (@Model.CurrentUser.FriendsRequest.Any(F => F.User.UserName == User.Identity.Name))
+    {
+        // friend sent friend request to you
+        <partial name="_DeleteRequestToFriendPartial" model="@Model.CurrentUser" />
+    }
+    else if (@Model.CurrentUser.MyRequests.Any(F => F.Friend.UserName == User.Identity.Name))
+    {
+        // you sent the friend request to him
+        <partial name="_ConfirmDeleteFriendRequestPartial" model="@Model.CurrentUser" />
+    }
+    else
+    {
+        <partial name="_AddFriendPartial" model="@Model.CurrentUser" />
+    }
+}
+
+
+
+*@

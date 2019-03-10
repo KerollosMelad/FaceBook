@@ -1,6 +1,13 @@
 ﻿@model Person
 
-<div>
-    <a asp-controller="Person" asp-action="DeleteRequestToFriend" asp-route-friendUserName="@Model.UserName" class="btn btn-danger"> Delete Request</a>
-</div>
+<span>
+    <a asp-controller="Person" asp-action="DeleteRequestToFriend" 
+        asp-route-friendUserName="@Model.UserName" 
+         asp-route-DefaultValue="1"
+          data-ajax="true" 
+          data-ajax-update="#friendshipState" 
+          data-ajax-mode="replace" 
+          data-method="post"        
+        > Delete Request</a>
+</span>
 

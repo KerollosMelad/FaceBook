@@ -1,0 +1,13 @@
+﻿@model Person
+
+
+<li id="@Model.Id">
+    <figure>
+        <img src=@Model.userphoto alt="">
+    </figure>
+    <div class="friend-meta">
+        <partial name="_LinkToUserProfile" model="@Model" />
+        <i class="underline"><partial name="_ConfirmDeleteFriendRequestPartial" model="@Model" /></i>
+    </div>
+</li>
+@*86a3194b-ad18-4267-bb37-0da55ee7c810	9933321f-55dd-4635-8744-3c4fc7b91a40	0*@

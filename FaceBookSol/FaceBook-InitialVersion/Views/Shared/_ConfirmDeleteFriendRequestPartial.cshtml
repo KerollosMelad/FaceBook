@@ -1,25 +1,28 @@
 ﻿@model Person
 
-<div id="myDiv">
-    <a asp-controller="Person" asp-action="ConfirmFriendRequest" asp-route-currentUserName="@User.Identity.Name" asp-route-FriendUserName="@Model.UserName" class="btn btn-success"> Confirm</a>
-    <a asp-controller="Person" asp-action="DeleteFriendRequest" asp-route-currentUserName="@User.Identity.Name" asp-route-FriendUserName="@Model.UserName" class="btn btn-danger"> Delete</a>
+<span>
+    <a class="underline" asp-controller="Person" asp-action="ConfirmFriendRequest" asp-route-currentUserName="@User.Identity.Name" asp-route-FriendUserName="@Model.UserName"
+       data-ajax="true"
+       data-ajax-success="onConfirmFriendRequestSuccess('@Model.Id')"
+       data-method="post">Confirm</a>
+    <a class="underline" asp-controller="Person" asp-action="DeleteFriendRequest" asp-route-currentUserName="@User.Identity.Name" asp-route-FriendUserName="@Model.UserName"
+       data-ajax="true"
+       data-ajax-success="onDeleteFriendRequestSuccess('@Model.Id')"
+       data-method="post"> Delete</a>
+</span>
 
+<script>
 
-    
-    @*<a asp-controller="Person" asp-action="DeleteFriendRequest" 
-                              asp-route-UserID="@Model._userID" asp-route-FriendUserName="@Model.Friend.UserName"
-                              class="btn btn-danger" 
-                              data-ajax="true" data-ajax-method="POST" data-ajax-mode="replace" data-ajax-update="#myDiv"
-                              > Delete</a>*@
-    
-    @*@Html.ActionLink("Remove", "Delete", "Products", new { id=item.ID}, new
-    {
-        data_ajax = "true",
-        data_ajax_method = "GET",
-        data_ajax_mode = "replace",
-        data_ajax_update = "#MyData"
-    })*@
+    function onConfirmFriendRequestSuccess(context) {
+        var s = '#' + context;
+        var il = $(s);
+        il.remove();
+    }
 
+    function onDeleteFriendRequestSuccess(context) {
+        var s = '#' + context;
+        var il = $(s);
+        il.remove();
+    }
 
-
-</div>
+</script>

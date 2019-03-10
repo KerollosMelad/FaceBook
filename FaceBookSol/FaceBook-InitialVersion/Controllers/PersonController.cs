@@ -8,9 +8,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using System.IO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FaceBook_InitialVersion.Controllers
 {
+    [Authorize(Roles = "Member")]
     public class PersonController : Controller
     {
         private readonly ApplicationDbContext _db;
@@ -155,9 +157,9 @@ namespace FaceBook_InitialVersion.Controllers
                     else
                     {
                         //no file was uploaded
-                        string upload = Path.Combine(webRootePath, @"images\" + "user.png");
-                        System.IO.File.Copy(upload, webRootePath + @"\images\" + person.Id + ".png");
-                        targetPerson.userphoto = @"\images\" + person.Id + ".png";
+                        //string upload = Path.Combine(webRootePath, @"images\" + "user.png");
+                        //System.IO.File.Copy(upload, webRootePath + @"\images\" + person.Id + ".png");
+                        //targetPerson.userphoto = @"\images\" + person.Id + ".png";
 
                     }
                     await _db.SaveChangesAsync();
@@ -179,6 +181,39 @@ namespace FaceBook_InitialVersion.Controllers
             return View(person);
         }
 
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditInfoPhoto(string UserName)
+        {
+            var targetPerson = await _db.Users.FirstOrDefaultAsync(p => p.UserName == User.Identity.Name);
+
+            string webRootePath = _he.WebRootPath;
+            //get the uploaded file from form 
+            var files = HttpContext.Request.Form.Files;
+            //get person from database
+            //var getpersonfromDB = await _db.Users.FindAsync(person.Id);
+            if (files.Count > 0)
+            {
+                //file has been uploaded
+                string upload = Path.Combine(webRootePath, "images");
+                string extension = Path.GetExtension(files[0].FileName);
+                using (var filesStream = new FileStream(Path.Combine(upload, targetPerson.Id + extension), FileMode.Append))
+                {
+                    files[0].CopyTo(filesStream);
+                }
+                targetPerson.userphoto = @"\images\" + targetPerson.Id + extension;
+            }
+            else
+            {
+                //no file was uploaded
+            }
+            await _db.SaveChangesAsync();
+            //return RedirectToAction(nameof(Profile), new { @UserName = User.Identity.Name });
+            return PartialView("_UserProfilePhoto",targetPerson);
+        }
+
+
         #endregion
 
         #region Dealing with friends Request
@@ -188,7 +223,7 @@ namespace FaceBook_InitialVersion.Controllers
         /// <param name="UserID"> UserID of the Person who sent the request</param>
         /// <param name="FriendUserName"> userName of the Person who Received the request </param>
         /// <returns></returns>
-        public IActionResult DeleteFriendRequest(string currentUserName, string FriendUserName)
+        public IActionResult DeleteFriendRequest(string currentUserName, string FriendUserName, int DefaultValue = 0)
         {
             // get friendship
             var friendship = GetFriendship(currentUserName, FriendUserName);
@@ -199,7 +234,14 @@ namespace FaceBook_InitialVersion.Controllers
 
             _db.Friendships.Remove(friendship);
             _db.SaveChanges();
-            return RedirectToAction(nameof(Profile), new { @UserName = FriendUserName });
+            if (DefaultValue == 0)
+            {
+                return NoContent();
+            }
+            else
+            {
+                return PartialView("_AddFriendPartial", _db.Users.FirstOrDefault(U => U.UserName == FriendUserName));
+            }
         }
 
         /// <summary>
@@ -208,7 +250,7 @@ namespace FaceBook_InitialVersion.Controllers
         /// <param name="UserID"> UserID of the Person who sent the request</param>
         /// <param name="FriendUserName"> userName of the Person who Received the request </param>
         /// <returns></returns>
-        public IActionResult ConfirmFriendRequest(string currentUserName, string FriendUserName)
+        public IActionResult ConfirmFriendRequest(string currentUserName, string FriendUserName, int DefaultValue = 0)
         {
             // get friendship
             var friendship = GetFriendship(currentUserName, FriendUserName);
@@ -220,7 +262,16 @@ namespace FaceBook_InitialVersion.Controllers
             //update friendship
             friendship.friendShipStatus = Enums.FriendShipStatus.Accepted;
             _db.SaveChanges();
-            return RedirectToAction(nameof(Profile), new { @UserName = FriendUserName });
+
+
+            if (DefaultValue == 0)
+            {
+                return NoContent();
+            }
+            else
+            {
+                return PartialView("_RemoveFriendFromProfilePartial", _db.Users.FirstOrDefault(U => U.UserName == FriendUserName));
+            }
         }
         #endregion
 
@@ -231,7 +282,7 @@ namespace FaceBook_InitialVersion.Controllers
         /// <param name="currentUserName"> UserID of the Person who sent the request</param>
         /// <param name="friendUserName"> userName of the Person who Received the request </param>
         /// <returns></returns>
-        public IActionResult RemoveFriend(string currentUserName, string friendUserName)
+        public IActionResult RemoveFriend(string currentUserName, string friendUserName, int DefaultValue = 0)
         {
             if (currentUserName == null && friendUserName == null)
             {
@@ -249,10 +300,19 @@ namespace FaceBook_InitialVersion.Controllers
                 _db.Friendships.Remove(friendship);
                 _db.SaveChanges();
             }
-            return RedirectToAction(nameof(Profile), new { @UserName = friendUserName });
+
+
+            if (DefaultValue == 0)
+            {
+                return NoContent();
+            }
+            else
+            {
+                return PartialView("_AddFriendPartial", _db.Users.FirstOrDefault(U => U.UserName == friendUserName));
+            }
         }
 
-        public IActionResult AddFriend(string friendUserName)
+        public IActionResult AddFriend(string friendUserName, int DefaultValue = 0)
         {
             if (friendUserName == null)
             {
@@ -274,12 +334,19 @@ namespace FaceBook_InitialVersion.Controllers
                 _db.Friendships.Add(friendship);
                 _db.SaveChanges();
             }
-            return RedirectToAction(nameof(Profile), new { @UserName = friendUserName });
+            if (DefaultValue == 0)
+            {
+                return NoContent();
+            }
+            else
+            {
+                return PartialView("_DeleteRequestToFriendPartial", _db.Users.FirstOrDefault(U => U.UserName == friendUserName));
+            }
         }
         #endregion
 
 
-        public IActionResult DeleteRequestToFriend(string friendUserName)
+        public IActionResult DeleteRequestToFriend(string friendUserName, int DefaultValue = 0)
         {
             // get friendship
             var friendship = GetFriendship(friendUserName, User.Identity.Name);
@@ -290,7 +357,15 @@ namespace FaceBook_InitialVersion.Controllers
 
             _db.Friendships.Remove(friendship);
             _db.SaveChanges();
-            return RedirectToAction(nameof(Profile), new { @UserName = friendUserName });
+
+            if (DefaultValue == 0)
+            {
+                return NoContent();
+            }
+            else
+            {
+                return PartialView("_AddFriendPartial", _db.Users.FirstOrDefault(U => U.UserName == friendUserName));
+            }
         }
 
         //private PersonModelView GetPersonModel(string userName)
@@ -410,6 +485,21 @@ namespace FaceBook_InitialVersion.Controllers
 
             // in friend request to you mean => (user => how sent the request, friend => you (how received the request))
             return _db.Friendships.FirstOrDefault(F => F.Friend.UserName == currentUserName && F.User.UserName == friendUserName);
+        }
+
+        public IActionResult FriendshipState(string friendUserName)
+        {
+            // get friendship
+            var friendship = GetFriendship(friendUserName, User.Identity.Name);
+            if (friendship == null)
+            {
+                return NotFound();
+            }
+            
+
+
+            
+            return RedirectToAction(nameof(Profile), new { @UserName = friendUserName });
         }
     }
 }

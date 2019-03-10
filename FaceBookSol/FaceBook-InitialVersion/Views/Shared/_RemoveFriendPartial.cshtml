@@ -1,6 +1,20 @@
 ﻿@model Person 
 
-<div>
-    <a asp-controller="Person" asp-action="RemoveFriend" asp-route-currentUserName="@User.Identity.Name" asp-route-friendUserName="@Model.UserName" class="btn btn-danger"> Remove</a>
-</div>
+<span>
+    <a asp-controller="Person" asp-action="RemoveFriend"
+       asp-route-currentUserName="@User.Identity.Name"
+       asp-route-friendUserName="@Model.UserName"
+       data-ajax="true"
+       data-ajax-success="onSuccess('@Model.Id')"
+       data-method="post">Remove friend</a>
+</span>
+
+<script>
+
+    function onSuccess(context) {
+        var s = '#' + context;
+        var il = $(s);
+        il.remove();
+    }
+</script>
 

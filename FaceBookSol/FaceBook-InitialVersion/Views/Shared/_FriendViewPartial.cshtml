@@ -1,0 +1,13 @@
+﻿@model Person
+
+
+<li id="@Model.Id">
+    <figure>
+        <img src=@Model.userphoto alt="">
+        <span class="status f-online"></span>
+    </figure>
+    <div class="friendz-meta">
+        <partial name="_LinkToUserProfile" model="@Model" />
+        <i><partial name="_RemoveFriendPartial.cshtml" model="@Model" /></i>
+    </div>
+</li>
