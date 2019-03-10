@@ -90,12 +90,13 @@ namespace FaceBook_InitialVersion.Controllers
                 FriendPosts = _context.Posts
                                         .Where(P => (friendsId.Contains(P.UserID)) && User.Identity.Name == User.Identity.Name)
                                         .Include(u => u.User)
-                                 .Include(u => u.UserPostLikes)
-                                 .Include(u => u.UserPostComments)
-                                 .ThenInclude(c => c.Comment)
-                                 .Include(u => u.UserPostComments)
-                                 .ThenInclude(c => c.User)
-                             .OrderByDescending(P => P.CreationDate).ToList()                                              // true
+                                        .Include(u => u.UserPostLikes).ThenInclude(l => l.User).ThenInclude(u => u.FriendsRequest)
+                                        .Include(u => u.UserPostLikes).ThenInclude(l => l.User).ThenInclude(u => u.MyRequests)
+                                        .Include(u => u.UserPostComments)
+                                        .ThenInclude(c => c.Comment)
+                                        .Include(u => u.UserPostComments)
+                                        .ThenInclude(c => c.User)
+                                        .OrderByDescending(P => P.CreationDate).ToList()                                              // true
 
 
             };

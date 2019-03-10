@@ -2,7 +2,7 @@
 @* Making the submiting of the form working with ajax *@
 @using Microsoft.AspNetCore.Identity
 @inject UserManager<Person> UserManager
-<form asp-controller="Person" asp-action="Create" data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="post">
+<form asp-controller="Person" asp-action="CreatePost" data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="post">
     <div class="new-postbox">
         <figure>
             <img src="@UserManager.Users.Where(u => u.UserName == User.Identity.Name).Select(u => u.userphoto).FirstOrDefault()" width="60" height="60" alt="">

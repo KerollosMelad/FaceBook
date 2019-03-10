@@ -16,7 +16,7 @@
                         <img src="@item.User.userphoto" width="60" height="60" alt="">
                     </figure>
                     <div class="friend-name">
-                        <ins><a asp-controller="Person" asp-action="Profile"  asp-route-UserName="@item.User.UserName" title="">@item.User.FirstName @item.User.LastName</a></ins>
+                        <ins><a asp-controller="Person" asp-action="Profile" asp-route-UserName="@item.User.UserName" title="">@item.User.FirstName @item.User.LastName</a></ins>
                         <span>published: @item.CreationDate.ToString("MMMM dd, yyyy") at @item.CreationDate.ToString("HH:mm tt")</span>
                     </div>
                     <div class="post-meta">
@@ -40,30 +40,34 @@
 
                                         <a asp-controller="Person" asp-action="Like" asp-route-id="@item.ID"
                                            data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="get">
-                                            <span class="like" @*data-toggle="tooltip" *@ title="like">
+                                            <span class="like" title="like">
                                                 <i class="ti-heart text-red"></i>
-                                                <ins>@item.UserPostLikes.Where(p => p.PostID == item.ID).Count()</ins>
                                             </span>
                                         </a>
+
                                     }
                                     else
                                     {
                                         <a asp-controller="Person" asp-action="Like" asp-route-id="@item.ID"
                                            data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="get">
-                                            <span class="dislike" @*data-toggle="tooltip" *@ title="dislike">
+                                            <span class="dislike" title="dislike">
                                                 <i class="ti-heart-broken"></i>
-                                                <ins>@item.UserPostLikes.Where(p => p.PostID == item.ID).Count()</ins>
                                             </span>
                                         </a>
+
                                     }
 
+                                    @if (item.UserPostLikes?.Count > 0)
+                                    {
+                                        <a class="counter" data-toggle="modal" data-target="#myModal"><ins>@item.UserPostLikes.Where(p => p.PostID == item.ID)?.Count()</ins></a>
+                                    }
                                 </li>
                                 <li>
                                     @* Show Delete icon for the user if he wrote that post *@
                                     @if (item.UserID == @UserManager.Users
-                                              .Where(u => u.UserName == User.Identity.Name)
-                                              .Select(u => u.Id)
-                                              .FirstOrDefault())
+                                             .Where(u => u.UserName == User.Identity.Name)
+                                             .Select(u => u.Id)
+                                             .FirstOrDefault())
                                     {
                                         <a asp-controller="Person" asp-action="DeletePost" asp-route-id="@item.ID"
                                            data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="get">
@@ -95,12 +99,12 @@
                                         </div>
                                         <div class="we-comment">
                                             <div class="coment-head">
-                                                <h5><a asp-controller="Person" asp-action="Profile"  asp-route-UserName="@comment.User.UserName" title="">@comment.User.FirstName @comment.User.LastName</a></h5>
+                                                <h5><a asp-controller="Person" asp-action="Profile" asp-route-UserName="@comment.User.UserName" title="">@comment.User.FirstName @comment.User.LastName</a></h5>
                                                 <span>@comment.Comment.CreationDate.ToString("MMMM dd,yyyy") at @comment.Comment.CreationDate.ToString("HH:mm tt")</span>
                                                 @if (comment.userID == @UserManager.Users
-                                                       .Where(u => u.UserName == User.Identity.Name)
-                                                       .Select(u => u.Id)
-                                                       .FirstOrDefault())
+                                                      .Where(u => u.UserName == User.Identity.Name)
+                                                      .Select(u => u.Id)
+                                                      .FirstOrDefault())
                                                 {
                                                     <a asp-action="DeleteComment" asp-controller="Person" asp-route-id="@comment.CommentID"
                                                        data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="get" title="delete comment"><i class="fa fa-trash-o"></i></a>
@@ -150,6 +154,61 @@
             </div>
         </div>
 
+        <style>
+
+            .modal {
+                background-color: rgba(0, 0, 0, 0.3);
+            }
+
+            .modal-backdrop {
+                position: relative;
+            }
+        </style>
+
+        <div class="modal fade" id="myModal" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="col-lg-12">
+                            <div class="central-meta">
+                                <div class="frnds">
+                                    <ul class="nav nav-tabs">
+                                        <li class="nav-item"><a class="active" href="#frends" data-toggle="tab">Likers</a> <span>@item.UserPostLikes.Where(p => p.PostID == item.ID)?.Count()</span></li>
+                                    </ul>
+
+                                    <!-- Tab panes -->
+                                    <div class="tab-content">
+                                        <div class="tab-pane active fade show " id="frends">
+                                            <ul class="nearby-contct">
+                                                @foreach (var user in item.UserPostLikes)
+                                                {
+                                                    <li>
+                                                        <div class="nearly-pepls">
+                                                            <figure>
+                                                                <a asp-controller="Person" asp-action="Profile" asp-route-UserName="@user.User.UserName" title=""><img src="@user.User.userphoto" width="40" height="40" alt=""></a>
+                                                            </figure>
+                                                            <div class="pepl-info">
+                                                                <h4><a asp-controller="Person" asp-action="Profile" asp-route-UserName="@user.User.UserName" title="">@user.User.FirstName @user.User.LastName</a></h4>
+                                                                <span>@user.User.Type</span>
+                                                                <a asp-controller="Person" asp-action="Profile" asp-route-UserName="@user.User.UserName" title="" class="add-butn" data-ripple="">view profile</a>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                }
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- centerl meta -->
+                    </div>
+
+                </div>
+            </div>
+        </div>
 
     }
 }
