@@ -210,7 +210,7 @@ namespace FaceBook_InitialVersion.Controllers
             }
             await _db.SaveChangesAsync();
             //return RedirectToAction(nameof(Profile), new { @UserName = User.Identity.Name });
-            return PartialView("_UserProfilePhoto",targetPerson);
+            return PartialView("_UserProfilePhoto", targetPerson);
         }
 
 
@@ -223,7 +223,7 @@ namespace FaceBook_InitialVersion.Controllers
         /// <param name="UserID"> UserID of the Person who sent the request</param>
         /// <param name="FriendUserName"> userName of the Person who Received the request </param>
         /// <returns></returns>
-        public IActionResult DeleteFriendRequest(string currentUserName, string FriendUserName, int DefaultValue = 0)
+        public IActionResult DeleteFriendRequest(string currentUserName, string FriendUserName)
         {
             // get friendship
             var friendship = GetFriendship(currentUserName, FriendUserName);
@@ -234,14 +234,9 @@ namespace FaceBook_InitialVersion.Controllers
 
             _db.Friendships.Remove(friendship);
             _db.SaveChanges();
-            if (DefaultValue == 0)
-            {
-                return NoContent();
-            }
-            else
-            {
-                return PartialView("_AddFriendPartial", _db.Users.FirstOrDefault(U => U.UserName == FriendUserName));
-            }
+
+            return NoContent();
+
         }
 
         /// <summary>
@@ -250,7 +245,7 @@ namespace FaceBook_InitialVersion.Controllers
         /// <param name="UserID"> UserID of the Person who sent the request</param>
         /// <param name="FriendUserName"> userName of the Person who Received the request </param>
         /// <returns></returns>
-        public IActionResult ConfirmFriendRequest(string currentUserName, string FriendUserName, int DefaultValue = 0)
+        public IActionResult ConfirmFriendRequest(string currentUserName, string FriendUserName)
         {
             // get friendship
             var friendship = GetFriendship(currentUserName, FriendUserName);
@@ -263,15 +258,7 @@ namespace FaceBook_InitialVersion.Controllers
             friendship.friendShipStatus = Enums.FriendShipStatus.Accepted;
             _db.SaveChanges();
 
-
-            if (DefaultValue == 0)
-            {
-                return NoContent();
-            }
-            else
-            {
-                return PartialView("_RemoveFriendFromProfilePartial", _db.Users.FirstOrDefault(U => U.UserName == FriendUserName));
-            }
+            return NoContent();
         }
         #endregion
 
@@ -495,10 +482,10 @@ namespace FaceBook_InitialVersion.Controllers
             {
                 return NotFound();
             }
-            
 
 
-            
+
+
             return RedirectToAction(nameof(Profile), new { @UserName = friendUserName });
         }
     }

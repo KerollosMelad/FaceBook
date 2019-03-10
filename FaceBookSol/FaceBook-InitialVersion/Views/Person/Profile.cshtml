@@ -37,10 +37,10 @@
                         }
                         else if (@Model.CurrentUser.MyRequests.Any(F => F.Friend.UserName == User.Identity.Name))
                         {
-                            <div id="friendshipState">
+                            <!--<div id="friendshipState">
                                 @*// you sent the friend request to him*@
                                 <partial name="_ConfirmDeleteFriendRequestPartial" model="@Model.CurrentUser" />
-                            </div>
+                            </div>-->
                         }
                         else
                         {
