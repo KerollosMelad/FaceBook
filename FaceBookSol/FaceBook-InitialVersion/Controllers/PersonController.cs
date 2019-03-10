@@ -369,7 +369,9 @@ namespace FaceBook_InitialVersion.Controllers
 
             var _currentUser = _db.Users
                                .Include(P => P.Posts)
-                               .Include("Posts.UserPostLikes")
+                               //.Include("Posts.UserPostLikes")
+                               .Include("Posts.UserPostLikes.User.FriendsRequest")
+                               .Include("Posts.UserPostLikes.User.MyRequests")
                                .Include("Posts.UserPostComments.Comment")
                                .Include("Posts.UserPostComments.User")
                                .Include("FriendsRequest.User")
@@ -478,8 +480,9 @@ namespace FaceBook_InitialVersion.Controllers
                 await _db.SaveChangesAsync();
             }
 
+            //string x = HttpContext.Session.GetString("UserName");
             //return PartialView("GetAll", await _db.Posts.Include(p => p.User).Include(u => u.UserPostLikes).ToListAsync());
-            return PartialView("GetMyPosts", await _db.Posts.Where(u => u.User.UserName == HttpContext.Session.GetString("UserName")).Include(p => p.User).Include(u => u.UserPostLikes).Include(u => u.UserPostComments).ThenInclude(c => c.Comment).Include(u => u.UserPostComments).ThenInclude(u => u.User).OrderByDescending(p => p.CreationDate).ToListAsync());
+            return PartialView("GetMyPosts", _db.Posts.Where(u => u.User.UserName == HttpContext.Session.GetString("UserName")).Include(p => p.User).Include(u => u.UserPostLikes).Include(u => u.UserPostComments).ThenInclude(c => c.Comment).Include(u => u.UserPostComments).ThenInclude(u => u.User).OrderByDescending(p => p.CreationDate).ToList());
 
         }
 

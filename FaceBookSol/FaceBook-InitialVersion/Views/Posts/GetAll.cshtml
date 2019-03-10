@@ -27,53 +27,19 @@
 
                             <p>@item.Body</p>
                         </div>
-                        <div class="we-video-info">
-                            <ul>
-                                
-                                <li>
-                                    @* Show likes counter *@
-                                    @if (!item.UserPostLikes.Where(u => u.PostID == item.ID && u.UserID == UserManager.GetUserId(User)).Any())
-                                    {
-
-                                        <a asp-action="Like" asp-route-id="@item.ID"
-                                           data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="get">
-                                            <span class="like" title="like">
-                                                <i class="ti-heart text-red"></i>
-                                            </span>
-                                        </a>
-
-                                    }
-                                    else
-                                    {
-                                        <a asp-action="Like" asp-route-id="@item.ID"
-                                           data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="get">
-                                            <span class="dislike" title="dislike">
-                                                <i class="ti-heart-broken"></i>
-                                            </span>
-                                        </a>
-
-                                    }
-
-                                    @if(item.UserPostLikes?.Count > 0) { 
-                                    <a class="counter" data-toggle="modal" data-target=@("#myModal_"+item.ID)><ins>@item.UserPostLikes.Where(p => p.PostID == item.ID)?.Count()</ins></a>
-                                    }
-                                </li>
-                          
-                            </ul>
-                        </div>
                         <div class="g-post-ranking">
                             @if (!item.UserPostLikes.Where(u => u.PostID == item.ID && u.UserID == UserManager.GetUserId(User)).Any())
                             {
-                                <a title=""asp-action="Like" asp-route-id="@item.ID"
+                                <a style="margin-right:0;" title=""asp-action="Like" asp-route-id="@item.ID"
                                            data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="get" class="likes"><i class="fa fa-heart-o"></i></a>
                             }
                             else
                             {
-                                <a title="" asp-action="Like" asp-route-id="@item.ID"
-                                           data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="get" class="likes"><i class="fa fa-heart" style="color:cornflowerblue;"></i>@item.UserPostLikes.Where(p => p.PostID == item.ID)?.Count() likes</a>
+                                <a style="margin-right:0;" title="" asp-action="Like" asp-route-id="@item.ID"
+                                           data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="get" class="likes"><i class="fa fa-heart" style="color:cornflowerblue;"></i></a>
                             }
 
-                            <a data-toggle="modal" data-target=@("#myModal_"+item.ID)>@item.UserPostLikes.Where(p => p.PostID == item.ID)?.Count() likes</a>
+                            <a data-toggle="modal" data-target=@("#myModal"+item.ID)>@item.UserPostLikes.Where(p => p.PostID == item.ID)?.Count() likes</a>
                             
                             <a title="" href="#" class="coments"><i class="fa fa-comment-o"></i>@item.UserPostComments.Where(c => c.Comment.State == Enums.CommentStatus.Active)?.Count() comments</a>
                             
@@ -160,6 +126,7 @@
             </div>
         </div>
 
+        
         <style>
 
             .modal {
@@ -171,7 +138,7 @@
             }
         </style>
 
-        <div class="modal fade" id=@("#myModal_"+item.ID) role="dialog">
+        <div class="modal fade" id=@("myModal"+item.ID) role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">

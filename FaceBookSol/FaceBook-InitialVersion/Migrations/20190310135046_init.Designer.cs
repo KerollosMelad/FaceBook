@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FaceBook_InitialVersion.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190305142852_init")]
+    [Migration("20190310135046_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

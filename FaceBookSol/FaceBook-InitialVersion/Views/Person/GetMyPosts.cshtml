@@ -4,11 +4,15 @@
 
 @inject UserManager<Person> UserManager
 
-
 @foreach (var item in Model)
 {
+
+
     if (item.State == Enums.PostStatus.Active)
     {
+        <script>
+        alert(@item.ID)
+        </script>
         <div class="central-meta item">
             <div class="user-post">
                 <div class="friend-info">
@@ -25,60 +29,32 @@
 
                             <p>@item.Body</p>
                         </div>
-                        <div class="we-video-info">
-                            <ul>
-                                <li>
-                                    <span class="comment" data-toggle="tooltip" title="Comments">
-                                        <i class="fa fa-comments-o"></i>
-                                        <ins>@item.UserPostComments.Where(c => c.Comment.State == Enums.CommentStatus.Active).Count()</ins>
+                        <div class="g-post-ranking">
+                            @if (!item.UserPostLikes.Where(u => u.PostID == item.ID && u.UserID == UserManager.GetUserId(User)).Any())
+                            {
+                                <a style="margin-right:0;" title="" asp-action="Like" asp-route-id="@item.ID"
+                                   data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="get" class="likes"><i class="fa fa-heart-o"></i></a>
+                            }
+                            else
+                            {
+                                <a style="margin-right:0;" title="" asp-action="Like" asp-route-id="@item.ID"
+                                   data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="get" class="likes"><i class="fa fa-heart" style="color:cornflowerblue;"></i></a>
+                            }
+
+                            <a data-toggle="modal" data-target=@("#myModal_"+item.ID)>@item.UserPostLikes.Where(p => p.PostID == item.ID)?.Count() likes</a>
+
+                            <a title="" href="#" class="coments"><i class="fa fa-comment-o"></i>@item.UserPostComments.Where(c => c.Comment.State == Enums.CommentStatus.Active)?.Count() comments</a>
+
+                            @if (item.User.UserName == User.Identity.Name)
+                            {
+                                <a asp-action="Delete" asp-route-id="@item.ID"
+                                   data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="get">
+
+                                    <span class="trash" title="delete">
+                                        <i class="fa fa-trash-o" style="color:red;"></i>
                                     </span>
-                                </li>
-                                <li>
-                                    @* Show likes counter *@
-                                    @if (!item.UserPostLikes.Where(u => u.PostID == item.ID && u.UserID == UserManager.GetUserId(User)).Any())
-                                    {
-
-                                        <a asp-controller="Person" asp-action="Like" asp-route-id="@item.ID"
-                                           data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="get">
-                                            <span class="like" title="like">
-                                                <i class="ti-heart text-red"></i>
-                                            </span>
-                                        </a>
-
-                                    }
-                                    else
-                                    {
-                                        <a asp-controller="Person" asp-action="Like" asp-route-id="@item.ID"
-                                           data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="get">
-                                            <span class="dislike" title="dislike">
-                                                <i class="ti-heart-broken"></i>
-                                            </span>
-                                        </a>
-
-                                    }
-
-                                    @if (item.UserPostLikes?.Count > 0)
-                                    {
-                                        <a class="counter" data-toggle="modal" data-target="#myModal"><ins>@item.UserPostLikes.Where(p => p.PostID == item.ID)?.Count()</ins></a>
-                                    }
-                                </li>
-                                <li>
-                                    @* Show Delete icon for the user if he wrote that post *@
-                                    @if (item.UserID == @UserManager.Users
-                                             .Where(u => u.UserName == User.Identity.Name)
-                                             .Select(u => u.Id)
-                                             .FirstOrDefault())
-                                    {
-                                        <a asp-controller="Person" asp-action="DeletePost" asp-route-id="@item.ID"
-                                           data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="get">
-
-                                            <span class="trash" title="delete">
-                                                <i class="fa fa-trash-o"></i>
-                                            </span>
-                                        </a>
-                                    }
-                                </li>
-                            </ul>
+                                </a>
+                            }
                         </div>
 
                     </div>
@@ -102,9 +78,9 @@
                                                 <h5><a asp-controller="Person" asp-action="Profile" asp-route-UserName="@comment.User.UserName" title="">@comment.User.FirstName @comment.User.LastName</a></h5>
                                                 <span>@comment.Comment.CreationDate.ToString("MMMM dd,yyyy") at @comment.Comment.CreationDate.ToString("HH:mm tt")</span>
                                                 @if (comment.userID == @UserManager.Users
-                                                      .Where(u => u.UserName == User.Identity.Name)
-                                                      .Select(u => u.Id)
-                                                      .FirstOrDefault())
+                                                    .Where(u => u.UserName == User.Identity.Name)
+                                                    .Select(u => u.Id)
+                                                    .FirstOrDefault())
                                                 {
                                                     <a asp-action="DeleteComment" asp-controller="Person" asp-route-id="@comment.CommentID"
                                                        data-ajax="true" data-ajax-update="#MyPosts" data-ajax-mode="replace" data-method="get" title="delete comment"><i class="fa fa-trash-o"></i></a>
@@ -154,10 +130,10 @@
             </div>
         </div>
 
-        <style>
+       <style>
 
             .modal {
-                background-color: rgba(0, 0, 0, 0.3);
+                background-color: rgba(0, 0, 0, 0.5);
             }
 
             .modal-backdrop {
@@ -165,7 +141,7 @@
             }
         </style>
 
-        <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal fade" id=@("myModal_"+item.ID) role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -205,7 +181,7 @@
                             </div>
                         </div><!-- centerl meta -->
                     </div>
-
+                   
                 </div>
             </div>
         </div>
