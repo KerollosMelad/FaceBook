@@ -154,12 +154,12 @@ namespace FaceBook_InitialVersion.Controllers
                         //file has been uploaded
                         string upload = Path.Combine(webRootePath, "images");
                         string extension = Path.GetExtension(files[0].FileName);
-                        using (var filesStream = new FileStream(Path.Combine(upload, person.Id + extension), FileMode.Append))
+                        using (var filesStream = new FileStream(Path.Combine(upload, DateTime.Now.ToString("MMMM-dd-yyyy-HH-mm-ss") + person.Id + extension), FileMode.Append))
                         {
                             files[0].CopyTo(filesStream);
                         }
 
-                        targetPerson.userphoto = @"\images\" + person.Id + extension;
+                        targetPerson.userphoto = @"\images\" + DateTime.Now.ToString("MMMM-dd-yyyy-HH-mm-ss") + person.Id + extension;
                     }
                     else
                     {
@@ -205,11 +205,11 @@ namespace FaceBook_InitialVersion.Controllers
                 //file has been uploaded
                 string upload = Path.Combine(webRootePath, "images");
                 string extension = Path.GetExtension(files[0].FileName);
-                using (var filesStream = new FileStream(Path.Combine(upload, targetPerson.Id + extension), FileMode.Create))
+                using (var filesStream = new FileStream(Path.Combine(upload, DateTime.Now.ToString("MMMM-dd-yyyy-HH-mm-ss") + targetPerson.Id + extension), FileMode.Create))
                 {
                     files[0].CopyTo(filesStream);
                 }
-                targetPerson.userphoto = @"\images\" + targetPerson.Id + extension;
+                targetPerson.userphoto = @"\images\" + DateTime.Now.ToString("MMMM-dd-yyyy-HH-mm-ss") + targetPerson.Id + extension;
             }
             else
             {
