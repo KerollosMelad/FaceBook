@@ -82,21 +82,21 @@
 
                 @if (SignInManager.IsSignedIn(User))
                 {
-                    <ul class="main-menu">
-                        @if(User.IsInRole("Member"))
-                        {
-                            <li>
-                            <a asp-action="Index" asp-controller="Posts">Home</a>
-                            </li>
-                            <li>
-                                <a asp-action="Profile" asp-controller="Person" asp-route-UserName="@User.Identity.Name">Profile</a>
-                            </li>
-                        }
+                <ul class="main-menu">
+                    @if (User.IsInRole("Member"))
+                    {
                         <li>
-                            <a asp-area="Identity" asp-page="/Account/Manage/SetPassword">Settings</a>
-
+                            <a asp-action="Index" asp-controller="Posts">Home</a>
                         </li>
-                    </ul>
+                        <li>
+                            <a asp-action="Profile" asp-controller="Person" asp-route-UserName="@User.Identity.Name">Profile</a>
+                        </li>
+                    }
+                    <li>
+                        <a asp-area="Identity" asp-page="/Account/Manage/SetPassword">Settings</a>
+
+                    </li>
+                </ul>
                 }
                 <partial name="_LoginPartial" />
 
@@ -104,7 +104,7 @@
         </div><!--topbar-->
         <section>
             @*cookie*@
-            @*<partial name="_CookieConsentPartial" />*@
+            <partial name="_CookieConsentPartial" />
 
             <div class="gray-bg">
                 <div class="container-fluid">

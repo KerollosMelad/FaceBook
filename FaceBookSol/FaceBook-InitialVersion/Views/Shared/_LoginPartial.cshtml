@@ -18,36 +18,36 @@
             </li>
         </ul>
     }
-        <div class="user-img">
-            <img src="@UserManager.Users.Where(u => u.UserName == User.Identity.Name).Select(u => u.userphoto).FirstOrDefault()" style="width:60px;height:60px;" alt="">
-            <div class="user-setting">
-                <a href="#" title=""><i class="ti-user"></i> view profile</a>
-                <a href="#" title=""><i class="ti-pencil-alt"></i>edit profile</a>
-                <a href="#" title=""><i class="ti-settings"></i>account setting</a>
-                <a href="#" title=""><i class="ti-power-off"></i>log out</a>
-            </div>
+    <div class="user-img">
+        <img src="@UserManager.Users.Where(u => u.UserName == User.Identity.Name).Select(u => u.userphoto).FirstOrDefault()" style="width:60px;height:60px;" alt="">
+        <div class="user-setting">
+            <a href="#" title=""><i class="ti-user"></i> view profile</a>
+            <a href="#" title=""><i class="ti-pencil-alt"></i>edit profile</a>
+            <a href="#" title=""><i class="ti-settings"></i>account setting</a>
+            <a href="#" title=""><i class="ti-power-off"></i>log out</a>
         </div>
+    </div>
 
-        //kerollos melad Home and profile
-        <ul class="navbar-nav">
-            <li class="nav-item">
-                <a class="nav-link text-dark"> @UserManager.Users.Where(u => u.UserName == User.Identity.Name).Select(u => $"{u.FirstName} {u.LastName}").FirstOrDefault()</a>
-            </li>
-            <li class="nav-item">
-                <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                    <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
-                </form>
-            </li>
-        </ul>
-    }
-    else
-    {
-        <ul class="navbar-nav">
-            <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
-            </li>
-        </ul>
-    }
+    //kerollos melad Home and profile
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link text-dark"> @UserManager.Users.Where(u => u.UserName == User.Identity.Name).Select(u => $"{u.FirstName} {u.LastName}").FirstOrDefault()</a>
+        </li>
+        <li class="nav-item">
+            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
+            </form>
+        </li>
+    </ul>
+}
+else
+{
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
+        </li>
+    </ul>
+}

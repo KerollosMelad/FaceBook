@@ -93,7 +93,7 @@
                         </li>
                         <li class="post-comment">
                             <div class="comet-avatar">
-                                <img src="@UserManager.Users.Where(u => u.UserName == User.Identity.Name).Select(u => u.userphoto).FirstOrDefault()" style="width:45px;height:45px;" alt="">
+                                <img src="@UserManager.Users.Where(u => u.UserName == User.Identity.Name).Select(u => u.userphoto).FirstOrDefault()" style="width:45px;height:40px;" alt="">
                             </div>
                             <div class="post-comt-box">
                                 <form asp-action="AddComment" asp-controller="Posts"

@@ -34,7 +34,7 @@ namespace FaceBook_InitialVersion.Controllers
 
             }
             else
-                return View();
+                return LocalRedirect("/Identity/Account/Login");
         }
 
         public IActionResult Privacy()
