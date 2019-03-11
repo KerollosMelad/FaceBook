@@ -584,6 +584,27 @@ namespace FaceBook_InitialVersion.Controllers
             await _db.SaveChangesAsync();
             return PartialView("GetMyPosts", await _db.Posts.Where(u => u.User.UserName == HttpContext.Session.GetString("UserName")).Include(p => p.User).Include(u => u.UserPostLikes).Include(u => u.UserPostComments).ThenInclude(c => c.Comment).Include(u => u.UserPostComments).ThenInclude(u => u.User).OrderByDescending(p => p.CreationDate).ToListAsync());
         }
+
+        public async Task<IActionResult> SearchForUsers(string Searchtext, string id)
+        {
+
+
+            if (Searchtext == null)
+            {
+                return View((await _userManager.GetUsersInRoleAsync("Member")).Where(i => i.Id != id && i.State == Enums.UserStatus.Active));
+
+            }
+
+            var xx = await _userManager.GetUsersInRoleAsync("Member");
+            var SearchResult = (from p in xx
+                                where p.FirstName.Contains(Searchtext, StringComparison.CurrentCultureIgnoreCase)
+                                || p.LastName.Contains(Searchtext, StringComparison.CurrentCultureIgnoreCase) ||
+                                p.Email.Contains(Searchtext, StringComparison.CurrentCultureIgnoreCase)
+                                select p).ToList().Where(i => i.Id != id && i.State == Enums.UserStatus.Active);
+
+
+            return View(SearchResult);
+        }
     }
 }
 

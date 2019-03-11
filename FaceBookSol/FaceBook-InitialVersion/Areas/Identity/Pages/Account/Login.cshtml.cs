@@ -82,12 +82,16 @@ namespace FaceBook_InitialVersion.Areas.Identity.Pages.Account
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var p = dbContext.Users.FirstOrDefault(pr => pr.Email ==Input.Email);
-                var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: true);
+
                 IList<string> result1 = new List<string>();
                 if (p!=null)
                 {
                     result1 = await userManager.GetRolesAsync(p);
                 }
+
+                if (p.State == Enums.UserStatus.Blocked &&  result1[0]!= "Admin")
+                    return RedirectToPage("./AccessDenied");
+                var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: true);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
@@ -97,7 +101,7 @@ namespace FaceBook_InitialVersion.Areas.Identity.Pages.Account
                     }
 
 
-                    return LocalRedirect(returnUrl);
+                    return RedirectToAction("Index","Posts");
                 }
                 if (result.RequiresTwoFactor)
                 {

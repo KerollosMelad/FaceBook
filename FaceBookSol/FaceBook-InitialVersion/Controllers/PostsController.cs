@@ -14,7 +14,8 @@ using System.Web;
 
 namespace FaceBook_InitialVersion.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Member")]
+
     public class PostsController : Controller
     {
         private readonly ApplicationDbContext _context;

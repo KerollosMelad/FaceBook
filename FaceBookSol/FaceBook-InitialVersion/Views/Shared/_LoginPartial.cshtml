@@ -8,9 +8,9 @@
         <li>
             <a href="" title="Home" data-ripple=""><i class="ti-search"></i></a>
             <div class="searched">
-                <form method="post" class="form-search">
-                    <input type="text" placeholder="Search Friend">
-                    <button data-ripple=""><i class="ti-search"></i></button>
+                <form asp-controller="Person" asp-action="SearchForUsers" asp-route-id="@UserManager.GetUserId(User)" id="hhsearchhh" method="post" class="form-search">
+                    <input type="text" name="Searchtext" placeholder="Search Friend" id="seartextarea">
+                    <button data-ripple="" onclick="document.getElementById('hhsearchhh').submit()"><i class="ti-search"></i></button>
                 </form>
             </div>
         </li>

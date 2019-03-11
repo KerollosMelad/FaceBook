@@ -1,0 +1,281 @@
+﻿@model IEnumerable<FaceBook_InitialVersion.Models.Person>
+
+@{
+    ViewData["Title"] = "SearchForUsers";
+}
+
+    @if (Model?.Count() > 0)
+    {
+        <div class="col-lg-3">
+            <aside class="sidebar static">
+                <div class="widget stick-widget">
+                    <h4 class="widget-title">Shortcuts</h4>
+                    <ul class="naves">
+                        <li>
+                            <i class="ti-clipboard"></i>
+                            <a href="newsfeed.html" title="">News feed</a>
+                        </li>
+
+                        <li>
+                            <i class="ti-user"></i>
+                            <a href="timeline-friends.html" title="">friends</a>
+                        </li>
+
+                        <li>
+                            <i class="ti-power-off"></i>
+                            <a href="landing.html" title="">Logout</a>
+                        </li>
+                    </ul>
+                </div><!-- Shortcuts -->
+            </aside>
+        </div><!-- sidebar -->
+
+        <div class="col-lg-6">
+            <div class="central-meta">
+                <div class="frnds">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item"><a class="active" href="#frends" data-toggle="tab">People </a> </li>
+
+                    </ul>
+
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div class="tab-pane active fade show " id="frends">
+                            <ul class="nearby-contct">
+                                @foreach (var item in Model)
+                                {
+                                    <li>
+                                        <div class="nearly-pepls">
+                                            <figure>
+                                                <a asp-action="Profile" asp-controller="Person" asp-route-UserName="@item.UserName" title=""><img src="@item.userphoto" style="width:60px;height:60px;"  alt=""></a>
+                                            </figure>
+                                            <div class="pepl-info">
+                                                <h4><a asp-action="Profile" asp-controller="Person" asp-route-UserName="@item.UserName" title="">@item.FirstName @item.LastName</a></h4>
+                                                <span>@item.Type</span>
+                                                @*<a href="#" title="" class="add-butn more-action" data-ripple="">unfriend</a>
+                                                <a href="#" title="" class="add-butn" data-ripple="">add friend</a>*@
+                                            </div>
+                                        </div>
+                                    </li>
+
+                                }
+                            </ul>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*<div class="col-lg-3">
+            <aside class="sidebar static">
+                <div class="widget">
+                    <h4 class="widget-title">Who's follownig</h4>
+                    <ul class="followers">
+                        <li>
+                            <figure><img src="images\resources\friend-avatar2.jpeg" alt=""></figure>
+                            <div class="friend-meta">
+                                <h4><a href="time-line.html" title="">Kelly Bill</a></h4>
+                                <a href="#" title="" class="underline">Add Friend</a>
+                            </div>
+                        </li>
+                        <li>
+                            <figure><img src="images\resources\friend-avatar4.jpeg" alt=""></figure>
+                            <div class="friend-meta">
+                                <h4><a href="time-line.html" title="">Issabel</a></h4>
+                                <a href="#" title="" class="underline">Add Friend</a>
+                            </div>
+                        </li>
+                        <li>
+                            <figure><img src="images\resources\friend-avatar6.jpeg" alt=""></figure>
+                            <div class="friend-meta">
+                                <h4><a href="time-line.html" title="">Andrew</a></h4>
+                                <a href="#" title="" class="underline">Add Friend</a>
+                            </div>
+                        </li>
+                        <li>
+                            <figure><img src="images\resources\friend-avatar8.jpeg" alt=""></figure>
+                            <div class="friend-meta">
+                                <h4><a href="time-line.html" title="">Sophia</a></h4>
+                                <a href="#" title="" class="underline">Add Friend</a>
+                            </div>
+                        </li>
+                        <li>
+                            <figure><img src="images\resources\friend-avatar3.jpeg" alt=""></figure>
+                            <div class="friend-meta">
+                                <h4><a href="time-line.html" title="">Allen</a></h4>
+                                <a href="#" title="" class="underline">Add Friend</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div><!-- who's following -->
+                <div class="widget friend-list stick-widget">
+                    <h4 class="widget-title">Friends</h4>
+                    <div id="searchDir"></div>
+                    <ul id="people-list" class="friendz-list">
+                        <li>
+                            <figure>
+                                <img src="images\resources\friend-avatar.jpeg" alt="">
+                                <span class="status f-online"></span>
+                            </figure>
+                            <div class="friendz-meta">
+                                <a href="time-line.html">bucky barnes</a>
+                                <i><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="abdcc2c5dfced9d8c4c7cfced9ebccc6cac2c785c8c4c6">[email&#160;protected]</a></i>
+                            </div>
+                        </li>
+                        <li>
+                            <figure>
+                                <img src="images\resources\friend-avatar2.jpeg" alt="">
+                                <span class="status f-away"></span>
+                            </figure>
+                            <div class="friendz-meta">
+                                <a href="time-line.html">Sarah Loren</a>
+                                <i><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="214340534f445261464c40484d0f424e4c">[email&#160;protected]</a></i>
+                            </div>
+                        </li>
+                        <li>
+                            <figure>
+                                <img src="images\resources\friend-avatar3.jpeg" alt="">
+                                <span class="status f-off"></span>
+                            </figure>
+                            <div class="friendz-meta">
+                                <a href="time-line.html">jason borne</a>
+                                <i><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="dab0bba9b5b4b89abdb7bbb3b6f4b9b5b7">[email&#160;protected]</a></i>
+                            </div>
+                        </li>
+                        <li>
+                            <figure>
+                                <img src="images\resources\friend-avatar4.jpeg" alt="">
+                                <span class="status f-off"></span>
+                            </figure>
+                            <div class="friendz-meta">
+                                <a href="time-line.html">Cameron diaz</a>
+                                <i><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="b3d9d2c0dcddd1f3d4ded2dadf9dd0dcde">[email&#160;protected]</a></i>
+                            </div>
+                        </li>
+                        <li>
+
+                            <figure>
+                                <img src="images\resources\friend-avatar5.jpeg" alt="">
+                                <span class="status f-online"></span>
+                            </figure>
+                            <div class="friendz-meta">
+                                <a href="time-line.html">daniel warber</a>
+                                <i><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d8b2b9abb7b6ba98bfb5b9b1b4f6bbb7b5">[email&#160;protected]</a></i>
+                            </div>
+                        </li>
+                        <li>
+
+                            <figure>
+                                <img src="images\resources\friend-avatar6.jpeg" alt="">
+                                <span class="status f-away"></span>
+                            </figure>
+                            <div class="friendz-meta">
+                                <a href="time-line.html">andrew</a>
+                                <i><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="b6dcd7c5d9d8d4f6d1dbd7dfda98d5d9db">[email&#160;protected]</a></i>
+                            </div>
+                        </li>
+                        <li>
+
+                            <figure>
+                                <img src="images\resources\friend-avatar7.jpeg" alt="">
+                                <span class="status f-off"></span>
+                            </figure>
+                            <div class="friendz-meta">
+                                <a href="time-line.html">amy watson</a>
+                                <i><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="6e040f1d01000c2e09030f0702400d0103">[email&#160;protected]</a></i>
+                            </div>
+                        </li>
+                        <li>
+
+                            <figure>
+                                <img src="images\resources\friend-avatar5.jpeg" alt="">
+                                <span class="status f-online"></span>
+                            </figure>
+                            <div class="friendz-meta">
+                                <a href="time-line.html">daniel warber</a>
+                                <i><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="5f353e2c30313d1f38323e3633713c3032">[email&#160;protected]</a></i>
+                            </div>
+                        </li>
+                        <li>
+
+                            <figure>
+                                <img src="images\resources\friend-avatar2.jpeg" alt="">
+                                <span class="status f-away"></span>
+                            </figure>
+                            <div class="friendz-meta">
+                                <a href="time-line.html">Sarah Loren</a>
+                                <i><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="640605160a0117240309050d084a070b09">[email&#160;protected]</a></i>
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="chat-box">
+                        <div class="chat-head">
+                            <span class="status f-online"></span>
+                            <h6>Bucky Barnes</h6>
+                            <div class="more">
+                                <span><i class="ti-more-alt"></i></span>
+                                <span class="close-mesage"><i class="ti-close"></i></span>
+                            </div>
+                        </div>
+                        <div class="chat-list">
+                            <ul>
+                                <li class="me">
+                                    <div class="chat-thumb"><img src="images\resources\chatlist1.jpeg" alt=""></div>
+                                    <div class="notification-event">
+                                        <span class="chat-message-item">
+                                            Hi James! Please remember to buy the food for tomorrow! I’m gonna be handling the gifts and Jake’s gonna get the drinks
+                                        </span>
+                                        <span class="notification-date"><time datetime="2004-07-24T18:18" class="entry-date updated">Yesterday at 8:10pm</time></span>
+                                    </div>
+                                </li>
+                                <li class="you">
+                                    <div class="chat-thumb"><img src="images\resources\chatlist2.jpeg" alt=""></div>
+                                    <div class="notification-event">
+                                        <span class="chat-message-item">
+                                            Hi James! Please remember to buy the food for tomorrow! I’m gonna be handling the gifts and Jake’s gonna get the drinks
+                                        </span>
+                                        <span class="notification-date"><time datetime="2004-07-24T18:18" class="entry-date updated">Yesterday at 8:10pm</time></span>
+                                    </div>
+                                </li>
+                                <li class="me">
+                                    <div class="chat-thumb"><img src="images\resources\chatlist1.jpeg" alt=""></div>
+                                    <div class="notification-event">
+                                        <span class="chat-message-item">
+                                            Hi James! Please remember to buy the food for tomorrow! I’m gonna be handling the gifts and Jake’s gonna get the drinks
+                                        </span>
+                                        <span class="notification-date"><time datetime="2004-07-24T18:18" class="entry-date updated">Yesterday at 8:10pm</time></span>
+                                    </div>
+                                </li>
+                            </ul>
+                            <form class="text-box">
+                                <textarea placeholder="Post enter to post..."></textarea>
+                                <div class="add-smiles">
+                                    <span title="add icon" class="em em-expressionless"></span>
+                                </div>
+                                <div class="smiles-bunch">
+                                    <i class="em em---1"></i>
+                                    <i class="em em-smiley"></i>
+                                    <i class="em em-anguished"></i>
+                                    <i class="em em-laughing"></i>
+                                    <i class="em em-angry"></i>
+                                    <i class="em em-astonished"></i>
+                                    <i class="em em-blush"></i>
+                                    <i class="em em-disappointed"></i>
+                                    <i class="em em-worried"></i>
+                                    <i class="em em-kissing_heart"></i>
+                                    <i class="em em-rage"></i>
+                                    <i class="em em-stuck_out_tongue"></i>
+                                </div>
+                                <button type="submit"></button>
+                            </form>
+                        </div>
+                    </div>
+                </div><!-- friends list sidebar -->
+
+            </aside>
+        </div>*@<!-- sidebar -->
+
+    }
+-

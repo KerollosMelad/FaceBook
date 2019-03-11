@@ -1,6 +1,6 @@
 ﻿using System;
 using FaceBook_InitialVersion.Models;
-using FaceBook_InitialVersion.Data ;
+using FaceBook_InitialVersion.Data;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,6 +9,7 @@ using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Http;
 
 namespace FaceBook_InitialVersion.Controllers
 {
@@ -66,23 +67,55 @@ namespace FaceBook_InitialVersion.Controllers
                                 p.Email.Contains(Searchtext, StringComparison.CurrentCultureIgnoreCase)
                                 select p).ToList();
 
-
+            HttpContext.Session.SetString("SearchText", Searchtext);
             return PartialView("Search", SearchResult);
 
         }
         public async Task<IActionResult> Activate(string id)
         {
-            var p = dbContext.Users.FirstOrDefault(per => per.Id == id);
-            p.State = Enums.UserStatus.Active;
+
+
+            var person = dbContext.Users.FirstOrDefault(per => per.Id == id);
+            person.State = Enums.UserStatus.Active;
+
             dbContext.SaveChanges();
-            return PartialView("Search", await userManager.GetUsersInRoleAsync("Member"));
+
+            string Searchtext = HttpContext.Session.GetString("SearchText");
+            //if (Searchtext == null)
+            //{
+            //    return PartialView("Search", await userManager.GetUsersInRoleAsync("Member"));
+
+            //}
+            var xx = await userManager.GetUsersInRoleAsync("Member");
+
+            var SearchResult = (from p in xx
+                                where p.FirstName.Contains(Searchtext, StringComparison.CurrentCultureIgnoreCase)
+                                || p.LastName.Contains(Searchtext, StringComparison.CurrentCultureIgnoreCase) ||
+                                p.Email.Contains(Searchtext, StringComparison.CurrentCultureIgnoreCase)
+                                select p).ToList();
+            return PartialView("Search", SearchResult);
         }
         public async Task<IActionResult> Block(string id)
         {
-            var p = dbContext.Users.FirstOrDefault(per => per.Id == id);
-            p.State = Enums.UserStatus.Blocked;
+          
+            var person = dbContext.Users.FirstOrDefault(per => per.Id == id);
+            person.State = Enums.UserStatus.Blocked;
             dbContext.SaveChanges();
-            return PartialView("Search", await userManager.GetUsersInRoleAsync("Member"));
+
+            string Searchtext = HttpContext.Session.GetString("SearchText");
+            //if (Searchtext == null)
+            //{
+            //    return PartialView("Search", await userManager.GetUsersInRoleAsync("Member"));
+
+            //}
+            var xx = await userManager.GetUsersInRoleAsync("Member");
+
+            var SearchResult = (from p in xx
+                                where p.FirstName.Contains(Searchtext, StringComparison.CurrentCultureIgnoreCase)
+                                || p.LastName.Contains(Searchtext, StringComparison.CurrentCultureIgnoreCase) ||
+                                p.Email.Contains(Searchtext, StringComparison.CurrentCultureIgnoreCase)
+                                select p).ToList();
+            return PartialView("Search", SearchResult);
 
         }
     }
