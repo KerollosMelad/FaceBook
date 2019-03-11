@@ -454,17 +454,19 @@ namespace FaceBook_InitialVersion.Controllers
             PersonModelView modelView = new PersonModelView()
             {
                 CurrentUser = _currentUser,
-                MyPosts =   User.Identity.Name == userName ?
-                            _currentUser?.Posts.OrderByDescending(P => P.CreationDate).ToList()
-                            : new List<Post>(),
 
                 // check the login person             
                 FriendPosts = User.Identity.Name == userName ?                                                               // ternary operator
                              _db.Posts.Where(P => (friendsId.Contains(P.UserID)) && User.Identity.Name == userName)
-                             .OrderBy(P => P.CreationDate).ToList().ToList()                                                 // true
+                             .OrderByDescending(P => P.CreationDate).ToList().ToList()                                                 // true
                              : new List<Post>(),                                                                             // false
 
+
                 myFriends = _db.Users.Where(U => (friendsId.Contains(U.Id))).ToList(),
+
+                MyPosts = ((User.Identity.Name == userName) || ((_db.Users.Where(U => (friendsId.Contains(U.Id))).ToList()).Any(u => u.UserName == User.Identity.Name))) ?
+                            _currentUser?.Posts.OrderByDescending(P => P.CreationDate).ToList()
+                            : new List<Post>(),
 
                 myFriendsRequest = User.Identity.Name == userName ?                                                 // ternary operator
                                   _currentUser.FriendsRequest                                                       // true

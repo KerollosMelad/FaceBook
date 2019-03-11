@@ -2,154 +2,177 @@
 @model RegisterModel
 @{
     ViewData["Title"] = "Register";
-} <h1>@ViewData["Title"]</h1>
-
-@*<div class="row">
-    <div class="col-md-4">
-        <form asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <h4>Create a new account.</h4>
-            <hr />
-            <div asp-validation-summary="All" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Input.FirstName"></label>
-                <input asp-for="Input.FirstName" class="form-control" />
-                <span asp-validation-for="Input.FirstName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Input.LastName"></label>
-                <input asp-for="Input.LastName" class="form-control" />
-                <span asp-validation-for="Input.LastName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-
-                <label asp-for="Input.Email"></label>
-                <input asp-for="Input.Email" class="form-control" />
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Input.Password"></label>
-                <input asp-for="Input.Password" class="form-control" />
-                <span asp-validation-for="Input.Password" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Input.ConfirmPassword"></label>
-                <input asp-for="Input.ConfirmPassword" class="form-control" />
-                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Input.BirthDay"></label>
-                <input asp-for="Input.BirthDay" class="form-control" />
-                <span asp-validation-for="Input.BirthDay" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Input.Gender"></label>
-                <select asp-for="Input.Gender" asp-items="Html.GetEnumSelectList<Enums.Gender>()" class="form-control"></select>
-                <span asp-validation-for="Input.Gender" class="text-danger"></span>
-            </div>
-
-            @if (User.IsInRole("Admin"))
-            {
-            <div class="form-group">
-                <label asp-for="Input.role"></label>
-                <select asp-for="Input.role" asp-items="Html.GetEnumSelectList<Enums.UserType>()" class="form-control"></select>
-                <span asp-validation-for="Input.role" class="text-danger"></span>
-            </div>
-            @*<div>
-                <div class="form-group">
-                    <label>Member </label>
-                    <input asp-for="Input.role" type="radio" name="RDRoles" value="Member" checked />
-                    <label>Admin </label>
-                    <input asp-for="Input.role" type="radio" name="RDRoles" value="Admin" />
-                </div>
-
-            </div>
-            }
-            <button type="submit" class="btn btn-primary">Register</button>
-        </form>
-    </div>
-</div>
-
-    @section Scripts {
-<partial name="_ValidationScriptsPartial" />
-    }*@
-
-<div>
-    <div style=" width:500px ;height:500px ;border-color:aqua ;border-width:thin">
-
-        <form asp-route-returnUrl="@Model.ReturnUrl" method="post" style="width:600px ; height:500px ;margin-bottom:50px ;background-color:white ;border-color:aqua ;border-width:thin ;margin-left:300px">
-            <div class="form-group">
-                <input type="text" required="required" asp-for="Input.FirstName">
-                <label class="control-label" asp-for="Input.FirstName">FirstName</label>
-                <span asp-validation-for="Input.FirstName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="text" required="required" asp-for="Input.LastName">
-                <label class="control-label" asp-for="Input.LastName">LastName</label>
-                <span asp-validation-for="Input.LastName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="password" required="required" asp-for="Input.Password">
-                <label class="control-label" asp-for="Input.Password">Password</label>
-                <span asp-validation-for="Input.Password" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <input type="password" required="required" asp-for="Input.ConfirmPassword">
-                <label class="control-label" asp-for="Input.ConfirmPassword">Confirm Password</label>
-                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="email" required="required" asp-for="Input.Email">
-                <label class="control-label" asp-for="Input.Email">Email </label>
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Input.BirthDay"></label>
-                <input asp-for="Input.BirthDay" class="form-control" />
-                <span asp-validation-for="Input.BirthDay" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Input.Gender"></label>
-                <select asp-for="Input.Gender" asp-items="Html.GetEnumSelectList<Enums.Gender>()" class="form-control"></select>
-                <span asp-validation-for="Input.Gender" class="text-danger"></span>
-            </div>
-
-            @*<div class="checkbox">
-                <label>
-                    <input type="checkbox" checked="checked"><i class="check-box"></i>Accept Terms & Conditions ?
-                </label>
-            </div>*@
-
-            @if (User.IsInRole("Admin"))
-            {
-            <div class="form-group">
-                <label asp-for="Input.role"></label>
-                <select asp-for="Input.role" asp-items="Html.GetEnumSelectList<Enums.UserType>()" class="form-control"></select>
-                <span asp-validation-for="Input.role" class="text-danger"></span>
-            </div>
-            <div>
-                <div class="form-group">
-                    <label>Member </label>
-                    <input asp-for="Input.role" type="radio" name="RDRoles" value="Member" checked />
-                    <label>Admin </label>
-                    <input asp-for="Input.role" type="radio" name="RDRoles" value="Admin" />
-                </div>
-
-            </div>
-            }
-            <div class="submit-btns">
-                <input class="mtr-btn signin" type="submit" name="Register" value="Register" style="position:absolute;top:480px ;left:600px;font-size:20px">
-                <span style="position:absolute;top:490px ;left:630px;font-size:20px ;color:black;"><b>Register</b></span>
-            </div>
-        </form>
-    </div>
-
-
-</div>
-@section Scripts {
-<partial name="_ValidationScriptsPartial" />
+    Layout = null;
 }
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <title>Winku Social Network Toolkit</title>
+    <link rel="icon" href="images\fav.png" type="image/png" sizes="16x16">
+
+    <link rel="stylesheet" href=“https://maxcdn.bootstrapcdn.com/font-awesome/5.7.2/css/font-awesome.min.css” />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="~/css/design/main.min.css" rel="stylesheet" />
+    <link href="~/css/design/style.css" rel="stylesheet" />
+    <link href="~/css/design/color.css" rel="stylesheet" />
+    <link href="~/css/design/responsive.css" rel="stylesheet" />
+
+    <!--Google Font-->
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,400i,700,700i" rel="stylesheet">
+
+    <!--Favicon-->
+    <link rel="shortcut icon" type="image/png" href="~/images/fav.png" />
+
+    <!--scripts-->
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
+    <script src="~/lib/jquery-unobtrusive-ajax/jquery.unobtrusive-ajax.js"></script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+    <script src="~/js/design/main.min.js"></script>
+    <script src="~/js/design/script.js"></script>
+    <script src="~/js/design/map-init.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+</head>
+<body>
+    <!--<div class="se-pre-con"></div>-->
+    <div class="theme-layout">
+        <div class="container-fluid pdng0">
+            <div class="row merged">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                    <div class="land-featurearea">
+                        <div class="land-meta">
+                            <h1>Winku</h1>
+                            <p>
+                                Winku is free to use for as long as you want with two active projects.
+                            </p>
+                            <div class="friend-logo">
+                                <span><img src="~/images/wink.png" alt=""></span>
+                            </div>
+                            <a href="#" title="" class="folow-me">Follow Us on</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                    <div class="login-reg-bg">
+
+                        <div class="log-reg-area sign">
+                            <h2 class="log-title">Register</h2>
+
+                            <form asp-route-returnUrl="@Model.ReturnUrl" method="post" id="signup">
+                                <div class="form-group">
+                                    <input type="text" required="required" asp-for="Input.FirstName">
+                                    <label class="control-label" asp-for="Input.FirstName">FirstName</label><i class="mtrl-select"></i>
+                                    <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" required="required" asp-for="Input.LastName">
+                                    <label class="control-label" asp-for="Input.LastName">LastName</label><i class="mtrl-select"></i>
+                                    <span asp-validation-for="Input.LastName" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <input type="email" required="required" asp-for="Input.Email">
+                                    <label class="control-label" asp-for="Input.Email">Email </label><i class="mtrl-select"></i>
+                                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" required="required" asp-for="Input.Password">
+                                    <label class="control-label" asp-for="Input.Password">Password</label><i class="mtrl-select"></i>
+                                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" required="required" asp-for="Input.ConfirmPassword">
+                                    <label class="control-label" asp-for="Input.ConfirmPassword">Confirm Password</label><i class="mtrl-select"></i>
+                                    <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                                </div>
+                                @*<div>
+                                        <div class="form-radio">
+                                            <div class="radio">
+                                                <label>
+                                                    <input asp-for="Input.Gender" type="radio" name="RDGenders" value="Male" checked /><i class="check-box"></i>Male
+                                                </label>
+                                            </div>
+                                            <div class="radio">
+                                                <label>
+                                                    <input asp-for="Input.Gender" type="radio" name="RDGenders" value="Female" /><i class="check-box"></i>Female
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>*@
+                                <div class="form-group">
+                                    <label asp-for="Input.Gender"></label>
+                                    <select asp-for="Input.Gender" asp-items="Html.GetEnumSelectList<Enums.Gender>()"></select>
+                                    <span asp-validation-for="Input.Gender" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Input.BirthDay"></label>
+                                    <input asp-for="Input.BirthDay" class="form-control" />
+                                    <span asp-validation-for="Input.BirthDay" class="text-danger"></span>
+                                </div>
+                                @if (User.IsInRole("Admin"))
+                                {
+
+                                    @*<div>
+                                            <div class="form-radio">
+                                                <div class="radio">
+                                                    <label>
+                                                        <input asp-for="Input.role" type="radio" name="RDRoles" value="Member" checked /><i class="check-box"></i>Member
+                                                    </label>
+                                                </div>
+                                                <div class="radio">
+                                                    <label>
+                                                        <input asp-for="Input.role" type="radio" name="RDRoles" value="Admin" /><i class="check-box"></i>Admin
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>*@
+                                    <div class="form-group">
+                                        <label asp-for="Input.role"></label>
+                                        <select asp-for="Input.role" asp-items="Html.GetEnumSelectList<Enums.UserType>()" class="form-control"></select>
+                                        <span asp-validation-for="Input.role" class="text-danger"></span>
+                                    </div>
+                                    <a asp-controller="Admin" asp-action="Index" title="" class="already-have back-to-admin">Back To Admin Panel</a>
+
+                                }
+                                else
+                                {
+                                    <a asp-area="Identity" asp-page="/Account/Login" title="" class="already-have back-to-login">Already have an account</a>
+                                }
+                                <div class="submit-btns">
+                                    <button class="mtr-btn signup" name="Register" type="submit"><span>Register</span></button>
+                                </div>
+
+                                <script>
+                                    $(".signup").on("click", function () {
+                                        $("#signup").submit();
+                                    });
+
+                                    $(".back-to-admin").click(function () {
+                                        location = "/Admin/Index";
+                                    });
+
+                                    $(".back-to-login").click(function () {
+                                        location = "/Identity/Account/login";
+                                    });
+                                </script>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</body>
+</html>
+
 

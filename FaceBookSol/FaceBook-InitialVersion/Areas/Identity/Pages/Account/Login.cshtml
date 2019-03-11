@@ -2,87 +2,97 @@
 @model LoginModel
 @{
     ViewData["Title"] = "Log in";
+    Layout = null;
 }
-@*<h1>@ViewData["Title"]</h1>
-    <div class="row">
-        <div class="col-md-4">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <title>Winku Social Network Toolkit</title>
+    <link rel="icon" href="images\fav.png" type="image/png" sizes="16x16">
 
+    <link rel="stylesheet" href=“https://maxcdn.bootstrapcdn.com/font-awesome/5.7.2/css/font-awesome.min.css” />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="~/css/design/main.min.css" rel="stylesheet" />
+    <link href="~/css/design/style.css" rel="stylesheet" />
+    <link href="~/css/design/color.css" rel="stylesheet" />
+    <link href="~/css/design/responsive.css" rel="stylesheet" />
 
-                <form id="account" method="post">
+    <!--Google Font-->
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,400i,700,700i" rel="stylesheet">
 
+    <!--Favicon-->
+    <link rel="shortcut icon" type="image/png" href="~/images/fav.png" />
 
-                    <div asp-validation-summary="All" class="text-danger"></div>
-                    <div class="form-group">
+    <!--scripts-->
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
+    <script src="~/lib/jquery-unobtrusive-ajax/jquery.unobtrusive-ajax.js"></script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+    <script src="~/js/design/main.min.js"></script>
+    <script src="~/js/design/script.js"></script>
+    <script src="~/js/design/map-init.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
 
-                            <input type="text" id="input" required="required">
-                            <label class="control-label" asp-for="Input.Email">Username</label><i class="mtrl-select"></i>
-
-                        <div asp-validation-for="Input.Email" class="text-danger"></div>
-                    </div>
-                    <div class="form-group">
-                        <input type="password" required="required">
-                        <label class="control-label" asp-for="Input.Password"></label><i class="mtrl-select"></i>
-
-                    </div>
-                    <div class="form-group">
-                        <div class="checkbox">
-                            <label asp-for="Input.RememberMe">
-                                <input asp-for="Input.RememberMe" />
-                                @Html.DisplayNameFor(m => m.Input.RememberMe)
-                            </label>
+</head>
+<body>
+    <!--<div class="se-pre-con"></div>-->
+    <div class="theme-layout">
+        <div class="container-fluid pdng0">
+            <div class="row merged">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                    <div class="land-featurearea">
+                        <div class="land-meta">
+                            <h1>Winku</h1>
+                            <p>
+                                Winku is free to use for as long as you want with two active projects.
+                            </p>
+                            <div class="friend-logo">
+                                <span><img src="~/images/wink.png" alt=""></span>
+                            </div>
+                            <a href="#" title="" class="folow-me">Follow Us on</a>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-primary" style="margin-bottom:100px">Log in</button>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                    <div class="login-reg-bg">
+                        <div class="log-reg-area sign">
+                            <h2 class="log-title">Login</h2>
+                            <p>
+                                Don’t use Winku Yet? <a asp-area="Identity" asp-page="/Account/Register" title="">Join now</a>
+                            </p>
+                            <form method="post">
+                                <div class="form-group">
+                                    <input type="text" id="input" asp-for="Input.Email" required="required"><br />
+                                    <label class="control-label" asp-for="Input.Email">Email</label><i class="mtrl-select"></i>
+                                    <div asp-validation-for="Input.Email" class="text-danger"></div>
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" asp-for="Input.Password" required="required">
+                                    <label class="control-label" asp-for="Input.Password">Password</label><i class="mtrl-select"></i>
+                                </div>
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" asp-for="Input.RememberMe" checked="checked"><i class="check-box"></i>Always Remember Me.
+                                    </label>
+                                </div>
+                                <a href="#" title="" class="forgot-pwd">Forgot Password?</a>
+                                <div class="submit-btns">
+                                    <button class="mtr-btn signin" type="submit"><span>Login</span></button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <p>
-                            <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
-                        </p>
-                        <p>
-                            <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
-                        </p>
-                    </div>
-                </form>
-
+                </div>
+            </div>
         </div>
-
     </div>
 
-    @section Scripts {
-        <partial name="_ValidationScriptsPartial" />
-    }*@
-<div class="login-reg-bg">
-    <div class="log-reg-area sign">
-        <h2 class="log-title">Login</h2>
-        <p>
-            Don’t use Winku Yet? <a href="#" title="">Take the tour</a> or <a href="#" title="">Join now</a>
-        </p>
-        <form method="post" style="margin-bottom:100px">
-            <div class="form-group">
-                <input type="text" id="input" asp-for="Input.Email" required="required"><br />
-                <label class="control-label" asp-for="Input.Email">Email</label>
-                <div asp-validation-for="Input.Email" class="text-danger"></div>
-            </div>
-            <div class="form-group">
-                <input type="password" asp-for="Input.Password" required="required">
-                <label class="control-label" asp-for="Input.Password">Password</label>
-            </div>
-            <div class="checkbox">
-                <label>
-                    <input type="checkbox"  asp-for="Input.RememberMe" checked="checked"><i class="check-box"></i>Always Remember Me.
-                </label>
-            </div>
-            <a href="#" title="" class="forgot-pwd">Forgot Password?</a>
-            <div class="submit-btns">
-                <input class="mtr-btn signin" type="submit" value="Login" style="position:absolute;top:450px ;left:500px;font-size:20px">
-                <span style="position:absolute;top:360px ;left:75px;font-size:20px ;color:black;"><b>Login</b></span>
-            </div>
-        </form>
-    </div>
+</body>
+</html>
 
-</div>
-
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
