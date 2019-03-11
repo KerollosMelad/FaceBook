@@ -81,11 +81,11 @@ namespace FaceBook_InitialVersion.Controllers
             dbContext.SaveChanges();
 
             string Searchtext = HttpContext.Session.GetString("SearchText");
-            //if (Searchtext == null)
-            //{
-            //    return PartialView("Search", await userManager.GetUsersInRoleAsync("Member"));
+            if (Searchtext == null)
+            {
+                return PartialView("Search", await userManager.GetUsersInRoleAsync("Member"));
 
-            //}
+            }
             var xx = await userManager.GetUsersInRoleAsync("Member");
 
             var SearchResult = (from p in xx
@@ -103,11 +103,11 @@ namespace FaceBook_InitialVersion.Controllers
             dbContext.SaveChanges();
 
             string Searchtext = HttpContext.Session.GetString("SearchText");
-            //if (Searchtext == null)
-            //{
-            //    return PartialView("Search", await userManager.GetUsersInRoleAsync("Member"));
+            if (Searchtext == null)
+            {
+                return PartialView("Search", await userManager.GetUsersInRoleAsync("Member"));
 
-            //}
+            }
             var xx = await userManager.GetUsersInRoleAsync("Member");
 
             var SearchResult = (from p in xx

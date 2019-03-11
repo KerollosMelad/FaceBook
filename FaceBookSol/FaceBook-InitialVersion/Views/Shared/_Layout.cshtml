@@ -83,12 +83,15 @@
                 @if (SignInManager.IsSignedIn(User))
                 {
                     <ul class="main-menu">
-                        <li>
+                        @if(User.IsInRole("Member"))
+                        {
+                            <li>
                             <a asp-action="Index" asp-controller="Posts">Home</a>
-                        </li>
-                        <li>
-                            <a asp-action="Profile" asp-controller="Person" asp-route-UserName="@User.Identity.Name">Profile</a>
-                        </li>
+                            </li>
+                            <li>
+                                <a asp-action="Profile" asp-controller="Person" asp-route-UserName="@User.Identity.Name">Profile</a>
+                            </li>
+                        }
                         <li>
                             <a asp-area="Identity" asp-page="/Account/Manage/SetPassword">Settings</a>
 
